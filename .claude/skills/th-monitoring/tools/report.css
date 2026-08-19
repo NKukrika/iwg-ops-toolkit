@@ -1,0 +1,408 @@
+:root {
+    --ground:      #FBFCFD;
+    --surface:     #FFFFFF;
+    --surface-alt: #F4F6F9;
+    --line:        #DFE4EB;
+    --line-soft:   #EBEFF4;
+    --ink:         #171B22;
+    --ink-2:       #3B4453;
+    --muted:       #5C6675;
+    --faint:       #8B95A4;
+
+    --accent:      #3D6A99;
+    --accent-soft: #E8EFF7;
+
+    --ok:      #1F8A54;
+    --ok-bg:   #E6F4EC;
+    --warn:    #A96806;
+    --warn-bg: #FBF0DC;
+    --crit:    #BC3227;
+    --crit-bg: #FBE9E7;
+    --none:    #78828F;
+    --none-bg: #EEF1F5;
+
+    --font-display: "Segoe UI Variable Display", "SF Pro Display", -apple-system,
+                    BlinkMacSystemFont, system-ui, sans-serif;
+    --font-text:    "Segoe UI Variable Text", "Segoe UI", -apple-system,
+                    BlinkMacSystemFont, system-ui, sans-serif;
+    --font-mono:    ui-monospace, "Cascadia Mono", "Cascadia Code", "SF Mono",
+                    Consolas, "Roboto Mono", monospace;
+
+    --measure: 68ch;
+    --pad: clamp(1.25rem, 4vw, 3.5rem);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:      #0E1116;
+      --surface:     #161A21;
+      --surface-alt: #1B212A;
+      --line:        #2A323D;
+      --line-soft:   #222932;
+      --ink:         #E7EBF1;
+      --ink-2:       #C2CAD6;
+      --muted:       #97A1B0;
+      --faint:       #6E7887;
+
+      --accent:      #7FA9D6;
+      --accent-soft: #1A2634;
+
+      --ok:      #4FBE85;
+      --ok-bg:   #12271C;
+      --warn:    #E0A13A;
+      --warn-bg: #2B2113;
+      --crit:    #F07A6D;
+      --crit-bg: #2E1815;
+      --none:    #8A94A3;
+      --none-bg: #1E242D;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground:      #0E1116;
+    --surface:     #161A21;
+    --surface-alt: #1B212A;
+    --line:        #2A323D;
+    --line-soft:   #222932;
+    --ink:         #E7EBF1;
+    --ink-2:       #C2CAD6;
+    --muted:       #97A1B0;
+    --faint:       #6E7887;
+
+    --accent:      #7FA9D6;
+    --accent-soft: #1A2634;
+
+    --ok:      #4FBE85;
+    --ok-bg:   #12271C;
+    --warn:    #E0A13A;
+    --warn-bg: #2B2113;
+    --crit:    #F07A6D;
+    --crit-bg: #2E1815;
+    --none:    #8A94A3;
+    --none-bg: #1E242D;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--font-text);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: var(--pad);
+    display: flex;
+    flex-direction: column;
+    gap: 3.25rem;
+  }
+
+  /* ---------- masthead ---------- */
+
+  .masthead { display: flex; flex-direction: column; gap: 1.5rem; }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0;
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5.5vw, 3rem);
+    line-height: 1.08;
+    letter-spacing: -0.025em;
+    font-weight: 660;
+    text-wrap: balance;
+    margin: 0;
+  }
+
+  .standfirst {
+    margin: 0;
+    max-width: var(--measure);
+    font-size: 1.075rem;
+    color: var(--muted);
+  }
+
+  .meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .meta div { background: var(--surface); padding: 0.85rem 1rem; }
+  .meta dt {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+    color: var(--faint);
+    margin: 0 0 0.3rem;
+  }
+  .meta dd {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ---------- cycle strip ---------- */
+
+  .cycle {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(148px, 1fr));
+    gap: 0.6rem;
+  }
+
+  .chk {
+    border: 1px solid var(--line);
+    border-top: 3px solid var(--accent);
+    border-radius: 3px;
+    background: var(--surface);
+    padding: 0.8rem 0.9rem 0.9rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+  .chk-n {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: var(--faint);
+  }
+  .chk-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    line-height: 1.25;
+    color: var(--ink);
+  }
+  .chk-state {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 600;
+  }
+
+  /* ---------- sections ---------- */
+
+  section { display: flex; flex-direction: column; gap: 1.15rem; }
+
+  .sec-head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 0.6rem;
+  }
+  .sec-num {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--accent);
+    font-weight: 600;
+  }
+  h2 {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    letter-spacing: -0.015em;
+    font-weight: 620;
+    margin: 0;
+    text-wrap: balance;
+  }
+  .sec-note {
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--faint);
+    text-align: right;
+  }
+
+  p { margin: 0; max-width: var(--measure); color: var(--ink-2); }
+  p + p { margin-top: 0.85rem; }
+  .stack > * + * { margin-top: 0.85rem; }
+
+  strong { color: var(--ink); font-weight: 640; }
+  code {
+    font-family: var(--font-mono);
+    font-size: 0.855em;
+    background: var(--surface-alt);
+    border: 1px solid var(--line-soft);
+    border-radius: 3px;
+    padding: 0.08em 0.34em;
+    color: var(--ink);
+    word-break: break-word;
+  }
+
+  /* ---------- tables ---------- */
+
+  .scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 3px; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+    background: var(--surface);
+  }
+  caption {
+    caption-side: top;
+    text-align: left;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--faint);
+    padding: 0 0 0.5rem;
+  }
+  th, td {
+    padding: 0.6rem 0.85rem;
+    text-align: left;
+    border-bottom: 1px solid var(--line-soft);
+    vertical-align: top;
+  }
+  thead th {
+    background: var(--surface-alt);
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 600;
+    white-space: nowrap;
+    border-bottom: 1px solid var(--line);
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  .num { text-align: right; font-variant-numeric: tabular-nums; font-family: var(--font-mono); white-space: nowrap; }
+  .mono { font-family: var(--font-mono); font-size: 0.82rem; }
+  .nowrap { white-space: nowrap; }
+
+  /* ---------- state pills ---------- */
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: 0.16rem 0.5rem 0.18rem;
+    border-radius: 2px;
+    white-space: nowrap;
+    background: var(--pbg);
+    color: var(--pfg);
+    border: 1px solid color-mix(in srgb, var(--pfg) 26%, transparent);
+  }
+  .pill::before {
+    content: "";
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--pfg);
+    flex: none;
+  }
+  /* Severity colour is used in section 01 only, where the workbook itself
+     defines the RAG bands. Every other section uses the neutral pill. */
+  .p-ok   { --pfg: var(--ok);   --pbg: var(--ok-bg); }
+  .p-warn { --pfg: var(--warn); --pbg: var(--warn-bg); }
+  .p-crit { --pfg: var(--crit); --pbg: var(--crit-bg); }
+  .p-none { --pfg: var(--none); --pbg: var(--none-bg); }
+  .p-plain { --pfg: var(--muted); --pbg: var(--surface-alt); }
+  .p-plain::before { display: none; }
+
+  .tally {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--muted);
+    align-items: center;
+  }
+
+  /* ---------- callout ---------- */
+
+  .note {
+    border-left: 2px solid var(--accent);
+    background: var(--surface);
+    border-top: 1px solid var(--line);
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    border-radius: 0 3px 3px 0;
+    padding: 0.95rem 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .note-label {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .note p { max-width: none; font-size: 0.92rem; }
+
+  /* ---------- tickets ---------- */
+
+  .tickets { display: flex; flex-direction: column; gap: 0.6rem; }
+  .ticket {
+    border: 1px solid var(--line);
+    border-left: 2px solid var(--accent);
+    border-radius: 0 3px 3px 0;
+    background: var(--surface);
+    padding: 0.9rem 1.1rem;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.3rem 1rem;
+    align-items: baseline;
+  }
+  .ticket-key {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+  .ticket-sub { font-size: 0.95rem; font-weight: 600; color: var(--ink); }
+  .ticket-meta {
+    grid-column: 2;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--faint);
+    letter-spacing: 0.04em;
+  }
+
+  ul { margin: 0; padding-left: 1.15rem; color: var(--ink-2); max-width: var(--measure); }
+  li + li { margin-top: 0.35rem; }
+  li::marker { color: var(--faint); }
+
+  footer {
+    border-top: 1px solid var(--line);
+    padding-top: 1.25rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--faint);
+    line-height: 1.7;
+  }
+
+  a { color: var(--accent); }
+  a:focus-visible, [tabindex]:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }

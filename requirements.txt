@@ -1,0 +1,3 @@
+# Triage only. The monitoring skills use the Python standard library plus the Azure CLI.
+pandas
+openpyxl

@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+~$*.xlsx
+
+# Monitoring runtime state. window.json pins a time window — a stale one silently
+# makes a cycle report on the wrong period, so it must never be committed.
+**/window.json
+**/run.json
+*.log
+**/err.txt
+**/*_err*.txt
+
+# Triage run workbooks hold real ServiceNow ticket data.
+# The Proposed Masters running tally lives inside the newest workbook here — to share
+# it across the team, force-add just that one file. See "Team policy" in README.md.
+triage/runs/*
+!triage/runs/.gitkeep
