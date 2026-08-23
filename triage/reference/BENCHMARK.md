@@ -587,3 +587,54 @@ those rows**: they carry no supplied group, so scoring them measures the fallbac
 than the shipped "the group on the export wins" behaviour, and it reads as a 76% routing
 regression that does not exist. And the run now prints a warning when no batch export is found
 at all, instead of printing an empty scorecard section that looks like a pass.
+
+## KBA index refreshed to 620 articles, 24 Aug 2026
+
+A full `kb_knowledge` export replaced the 396-article index. It is a clean superset — every
+existing KB Number is present, 224 are new, no duplicates within the export, and nothing in the
+old index is missing from it. So this was a rebuild rather than a merge.
+
+**What had to be carried across by hand.** The export has no memory of the mapping work: 36
+rows carry a `Covers master ticket` value (10 High confidence, 26 Medium) and 6 carry Notes.
+Those are human judgement and nothing regenerates them, so `rebuild_kba_index.py` joins them
+back on KB Number and refuses to run if any existing KBA is absent from the export.
+
+**Two format facts the export does not tell you.** ServiceNow ships `Article body` as raw HTML
+— all 553 non-empty bodies — while the index stores prose, so the rebuild strips tags and
+entities. And `Search text` is capped at **1200 characters**: 126 rows in the old index sat
+exactly at that length, which is a deliberate guard against the query dilution recorded above,
+not an accident. Raw bodies average 5,121 characters, so dropping the cap would have quintupled
+document length and diluted every query.
+
+`Knowledge base` replaces the old `Audience` vocabulary. The mapping was derived from the 396
+overlapping rows rather than guessed, and is unambiguous — every value maps to exactly one
+audience, no conflicts:
+
+```
+IT L1 Service Desk KB -> L1        Customer Support -> Customer Support
+IT L2/L3 Technical KB -> L2        End-User Support -> End User
+Centre Support        -> Centre Support    Known Errors -> Known Errors
+```
+
+### Effect: coverage up, accuracy still unmeasured
+
+Category and master matching are **unchanged to the decimal** (86.5% / 96.4%) — the KBA index is
+built separately from master matching, so extra articles cannot degrade them. That is the whole
+risk profile of this change.
+
+On 600 sampled tickets:
+
+| | 396 KBAs | 620 KBAs |
+|---|---|---|
+| Ticket gets any suggestion | 498/600 = 83.0% | **549/600 = 91.5%** |
+| Top hit rated *strong* | 34 | **45** |
+
+**89 tickets had their top KBA change to a different article.** That churn is not validated —
+`measure.py` has no KBA metric at all, because there is no ground truth for which article the
+desk actually used. Coverage rose; whether the suggestions are *better* is unproven, and
+should not be reported as if it were.
+
+Closing that gap needs tickets labelled with the KBA the desk actually applied. Until then the
+KBA column stays a suggestion to confirm, like root cause.
+
+67 articles arrived with no body and are indexed on title alone, so they match weakly.
