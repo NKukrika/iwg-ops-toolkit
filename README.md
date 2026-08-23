@@ -13,6 +13,10 @@ reference data they run against.
 skills, so they activate automatically when you are working inside this folder — there is
 nothing to install into Claude Code itself.
 
+> **New to this? Start with [SETUP.md](SETUP.md).** It walks through installing Claude Code,
+> Git, Python and the Azure CLI from nothing, and assumes no terminal experience. The section
+> below is the short version, for people who already have those tools.
+
 ---
 
 ## Setup
