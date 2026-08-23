@@ -20,3 +20,6 @@ triage/runs/*
 # folder and its README are tracked; the data files are not.
 triage/reference/truth/*
 !triage/reference/truth/README.md
+
+# Incoming ServiceNow exports awaiting triage hold real ticket data.
+triage/for triage/

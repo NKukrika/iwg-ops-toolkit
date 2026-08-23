@@ -638,3 +638,65 @@ Closing that gap needs tickets labelled with the KBA the desk actually applied. 
 KBA column stays a suggestion to confirm, like root cause.
 
 67 articles arrived with no body and are indexed on title alone, so they match weakly.
+
+## Run of 23 Aug 2026 — a cluster placement that would have created a wrong master
+
+Four tickets. The most valuable thing in this batch is a near miss.
+
+**INC0769090 nearly went into the wrong renewals cluster.** It reads *"Sorry! An error occurred
+while renewing recent termination"*, and `[Renewals] Error submitting renewal team request in
+TeamHub` was sitting at **9 of 10** — so placing it there would have crossed the threshold and
+triggered a new master. It does not belong there. The reporter's path was `Company > Amend
+agreement > Select booking(s) > Renew recent termination`: the amendment **itself** failed. The
+9-count cluster is the *handoff to the renewals team* failing — "submit your request", "central
+renewal support", "connect to centralized renewals". None of that appears here.
+
+It went to the sibling `[Renewals] Error when amending an agreement in TeamHub`, which is now
+**5**. The distinction is the one the sibling's own comment warns about, and this is the first
+time it has actually mattered: getting it wrong would have created a master for an issue seen
+nine times, merged two distinct faults under one name, and stopped anyone counting the real one.
+
+### Two keyword gaps, one of which also corrupted a priority
+
+Both tickets fell through to `Unclassified` on symptom text and then took whatever the pipe hint
+gave them:
+
+| Ticket | Was | Should be |
+|---|---|---|
+| INC0769018 "Unauthorized company name change on customer account" | Quick Access | **Accounts and Companies** |
+| INC0768988 "Primary and secondary Customer not receiving monthly invoice email" | Unclassified | **Invoicing** |
+
+The first also **changed the priority**: the shipped rule sends Quick Access to P4, so a
+misclassification silently downgraded a ticket that the matrix grades P3. Category errors are
+not confined to the category column.
+
+Keywords added — `company name change`, `company name was changed`, `company name changed
+without`, `unauthorized company name` to Accounts and Companies; `not receiving monthly invoice`,
+`not receiving invoice email`, `invoice email has not been received` to Invoicing. All four rows
+now classify from the symptom rather than the hint fallback. Measured: **no change**, 86.5%
+category and 96.4% master, exactly as before — the terms are narrow enough not to disturb
+anything else.
+
+### A defect found and deliberately not fixed
+
+`pipe_hint()` ends in a loose token-overlap fallback that accepts a match on **one** shared word,
+and breaks ties by category precedence order. `Accounts & Access` shares exactly one token with
+`Quick **Access**` and one with `**Accounts** and Companies`. Quick Access wins purely because it
+is tested first.
+
+That is arbitrary, and any two-word hint whose words straddle two categories hits it. Tightening
+it — requiring two shared tokens, or scoring by overlap ratio — is a change to `classify.py` with
+a much wider blast radius than a keyword addition, so it is recorded here rather than made
+mid-run. **It should be tested against the benchmark before shipping, not reasoned about.**
+
+Fixing the symptom keywords makes the hint moot for these two rows, but the defect is still live
+for every ticket whose symptom does not classify.
+
+### Still open from this batch
+
+**INC0768982** — *"OSA sending shows inconsistent office content"* — classified
+`Contract API/Agreements` on the `osa` keyword. The OSA sent successfully; the fault is that the
+webmaster message arrived twice, first with one office and then with both. That is a notification
+duplication, not agreement state being wrong, and it matches no existing cluster or master. Left
+unclustered at a single occurrence rather than opening a cluster for one ticket. Worth watching:
+if a second arrives it is a genuine new cluster, not a member of the amend-agreement one.

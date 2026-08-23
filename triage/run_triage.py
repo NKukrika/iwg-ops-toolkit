@@ -89,7 +89,7 @@ CLUSTERS = {
         "note": "AT 7 AND GROWING. TWO DECISIONS OVERDUE: (1) the name says 'Invoices paid ... showing unpaid' but most members are payments and vouchers that never arrived at all - rename or split; (2) the registry master [SOA] Balance Mismatch competes for these tickets and has NO MST tag - allocate one and fold the cluster in, or scope the master's keywords.",
     },
     "[Renewals] Error submitting renewal team request in TeamHub": {
-        "cat": "Renewals", "ids": ["INC0768916"],
+        "cat": "Renewals", "ids": [],
         "terms": "submit your request; renewal team; send to customer; error occurred when trying to submit; an error occured while trying to submit your request; central renewal support; crt ticket",
         "note": "NO JIRA COVERS THIS - checked 21 Aug. NOW 9 - ONE MORE CROSSES THE THRESHOLD. INC0768916 is 'connect to centralized renewals' erroring with 'place an IT ticket', the same handoff failure. Eight reporters across five batches. This should be raised with the TeamHub team now; the next occurrence makes it a master.",
     },
@@ -97,9 +97,9 @@ CLUSTERS = {
     # freezes, rather than the handoff to the renewals team failing.
     "[Renewals] Error when amending an agreement in TeamHub": {
         "cat": "Renewals",
-        "ids": [],
-        "terms": "error occured when performing amend agreement; error occurred when performing amend agreement; unable to send renewal osa; teamhub freezes; something went wrong, please log an it ticket via teamhub; move agreement",
-        "note": "CATEGORY IS AN OPEN QUESTION - bracketed [Renewals] provisionally. A resolved ticket worded 'Not able to amend agreement' is tagged XC (Product and Services), while the 14 Aug review put TeamHub amend/renew errors under Renewals. Also spans renewal amendments (INC0768485, INC0768499) and office/country moves (INC0768359, INC0768524) - may want splitting.",
+        "ids": ["INC0769090"],
+        "terms": "error occured when performing amend agreement; error occurred when performing amend agreement; unable to send renewal osa; teamhub freezes; something went wrong, please log an it ticket via teamhub; move agreement; renew recent termination; error occurred while renewing recent termination",
+        "note": "NOW 5. INC0769090 (23 Aug) errors on Company > Amend agreement > Select booking(s) > Renew recent termination - the amendment itself failing, NOT the handoff to the renewals team, so it belongs here and not in the 9-count sibling above. Placing it there would have falsely crossed the 10 threshold. CATEGORY IS STILL AN OPEN QUESTION - bracketed [Renewals] provisionally. A resolved ticket worded 'Not able to amend agreement' is tagged XC (Product and Services), while the 14 Aug review put TeamHub amend/renew errors under Renewals. Also spans renewal amendments (INC0768485, INC0768499) and office/country moves (INC0768359, INC0768524) - may want splitting.",
     },
     # Five tickets asking for a duplicate or invalid posting in MyRegus to be
     # reversed or zeroed out. Distinct from the D365-sync cluster: there the
@@ -117,14 +117,14 @@ CLUSTERS = {
     # these carry UNCATEGORISED and cannot be fully tagged.
     "[UNCATEGORISED] Printer accepts the job but nothing prints": {
         "cat": "Unclassified",
-        "ids": ["INC0767028", "INC0768143", "INC0768271"],
+        "ids": [],
         "terms": "nothing prints; never prints; sits on a loading screen; shows the job as completed; print jobs send successfully",
         "note": "Three tickets, no category. INC0767028 classifies as Quick Access only because the reporter mentions refreshing WKP from MyRegus Quick Access as a troubleshooting step - the fault is print output. This is the fourth printer ticket overall and the category decision is still open.",
     },
     # Two tickets both citing TTN-143719, the KA backbill defect.
     "[Invoicing] KA backbill cannot be removed (TTN-143719)": {
         "cat": "Invoicing",
-        "ids": ["INC0768814", "INC0768331"],
+        "ids": [],
         "terms": "backbilled ka; ka backbill; backbilled ka cannot be removed; unnecessary ka fee; ka fee",
         "note": "CONFIRMED IN JIRA: TTN-143719 is Fixed and Ready For Release under R26.08.01, dated 2026-08-13 but NOT YET RELEASED. Both tickets are children of it and the fix is upstream - they should not be worked individually. INC0768932 (19 Aug) is the same defect's second symptom. Expect more until R26.08.01 ships.",
     },
