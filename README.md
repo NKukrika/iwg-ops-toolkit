@@ -158,8 +158,10 @@ Worth knowing before you trust the saved artifacts:
   observed. Do not describe it as capped.
 - TeamHub's workbook computes `Availability %` independently of the `num_failed_requests`
   column beside it, so the two do not always reconcile. Bands follow availability.
-- Triage **root cause is a suggestion**, measured at ~41% with a ceiling near 43% from ticket
-  text alone. Confirm before saving.
+- Triage **root cause is a suggestion**, measured at ~44% on the graded scorecard rows. A
+  rebuild of the category priors scores 67% on those rows but is **not yet independently
+  verified** — the benchmark export carries no resolution code to check it against. Confirm
+  before saving.
 
 ---
 
@@ -174,6 +176,7 @@ triage/
   run_triage.py         the runner
   measure.py            accuracy check — run after any reference edit
   reference/            registry, categories, KBA index, routing, priority matrices
+    truth/              benchmark workbooks (gitignored; see the README there)
   runs/                 output workbooks (gitignored by default)
 requirements.txt
 ```
