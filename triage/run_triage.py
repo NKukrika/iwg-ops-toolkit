@@ -175,10 +175,13 @@ MANUAL_NAME = {
     # the owner's ruling of 26 Aug.
     "INC0769440": "[SOA] Titan balance requested for a list of accounts",
     "INC0769568": "[XC (Product and Services)] Recurring charges not appearing on the immediate invoice",
-    # Same truncated-name problem, category not in dispute. INC0769416 has it too
-    # but is left alone: its Login category is flagged as wrong, and naming it
-    # would bake that in.
     "INC0769409": "[Payments - Credit Card] Repeated attempts to add a credit card fail on app and website",
+    # Owner correction, 26 Aug: NOT a login fault. The reported issue is that
+    # invoices issued since 20 Aug were rejected by Edicom, the India e-invoicing
+    # platform; "unable to log in" is a second symptom of that same outage, not
+    # the fault being reported. The source short description is truncated
+    # mid-word ("unable to log "), so the name is written from the body.
+    "INC0769416": "[Invoicing] Invoices rejected in Edicom India since 20 Aug",
     # 21 Aug
     "INC0768805": "[Accounts and Companies] France customer data hotfix - phase 2",
     "INC0768846": "[UNCATEGORISED] Test ticket - no issue reported",

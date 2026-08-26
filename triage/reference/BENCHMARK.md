@@ -811,3 +811,33 @@ also being discarded.
 INC0769409 was given a hand-written name at the same time — same truncation, category not in
 dispute. INC0769416 has the same problem and was deliberately left alone: its Login category is
 flagged as wrong above, and naming it would bake that in.
+
+### Owner correction: INC0769416 is not a login fault at all
+
+I read *"New invoices issued since Aug20 were rejected and we are unable to log in"* as a login
+problem at a third party, and said so. Wrong on the substance, not just the routing. The reported
+fault is that **invoices were rejected by Edicom**, the India e-invoicing platform; "unable to log
+in" is a *second symptom of that same outage*, not the issue being raised. Correct category is
+**Invoicing**.
+
+The benchmark supports it. All four tickets mentioning `edicom` are invoice or credit-note
+failures — reissuing CNs not uploaded during an "Edicom suspension", hotfixing CNs for posting —
+and one arrives pipe-hinted `E-invoicing | Invoicing issue`. None is an authentication problem.
+Three of the four currently classify as Unclassified, so `edicom` should pick them up too.
+
+Added to Invoicing: `edicom`, `e-invoicing platform`, `invoices were rejected`. Category and
+master unchanged at 86.5% / 96.4%.
+
+**Routing corrected itself.** With the category right, the Login -> Proton override no longer
+fires and the group falls back to the sheet: `L2 - Titan`, source `sheet (authoritative)`. This
+is the concrete demonstration of the point recorded above — where Login overrides the sheet, a
+category error *is* a routing error, and fixing the category fixes both.
+
+The source short description is truncated mid-word (`... unable to log `), so the name is written
+by hand from the body: *"[Invoicing] Invoices rejected in Edicom India since 20 Aug"*.
+
+**A caution for reading these tickets.** Two symptoms in one sentence do not carry equal weight.
+"X was rejected **and** we cannot log in" reports one fault with two consequences, and the
+classifier matched the second clause because `log in` is a stronger keyword than anything in the
+first. Only INC0769431 now remains on the wrong side of this — there the word *login* describes
+remediation already attempted, not a symptom at all.
