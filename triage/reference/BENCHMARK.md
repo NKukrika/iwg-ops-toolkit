@@ -841,3 +841,78 @@ by hand from the body: *"[Invoicing] Invoices rejected in Edicom India since 20 
 classifier matched the second clause because `log in` is a stronger keyword than anything in the
 first. Only INC0769431 now remains on the wrong side of this — there the word *login* describes
 remediation already attempted, not a symptom at all.
+
+## Fifth scorecard, 26 Aug 2026 — 186 rows, and the Login override narrowed
+
+The reviewer's grading of the 26 Aug batch corrected four categories and one routing, and
+**corrected me on a claim I had made twice**.
+
+### I argued INC0769431's category was wrong. It was not.
+
+I recorded, in two places, that classifying INC0769431 as `Login` was an error — the ticket is a
+TeamHub outage and "login" appears only as remediation the reporter had tried. The reviewer
+graded the category **Login** and moved the *routing* to `L2 - Portal`.
+
+So the category was right and only the destination was wrong. The lesson is narrower than the
+one I drew: a ticket can genuinely be about signing in and still not belong to Proton.
+
+### The override is right 6 times in 7 — so it stays, but scoped
+
+Across every row the reviewer has graded as Login:
+
+```
+INC0767607  INC0767639  INC0768546  INC0768571  INC0768590  INC0769406   -> L2 - Proton
+INC0769431                                                               -> L2 - Portal
+```
+
+Deleting the override to fix one row would have broken six. Instead it now requires the login to
+be the **fault** rather than a passing mention.
+
+Of the 22 Login keywords, exactly one — a bare `login` — can match a ticket where signing in is
+incidental. Every other names a failure: `unable to log in`, `account blocked`, `verification
+code`, `otp`, `password reset`. `_login_is_the_fault()` requires one of the specific terms, and
+the two cases separate cleanly:
+
+| | Matched on | Routes to |
+|---|---|---|
+| INC0769406 *"unable to log in to Customer Portal - account blocked"* | specific | Proton (override fires) |
+| INC0769431 *"...after reinstall and login"* | bare token only | Portal (sheet wins) |
+
+The term list is held in `classify.py`, **not** read from `categories.csv`, so that adding a
+keyword for classification cannot silently move tickets between teams. That should be a separate
+decision.
+
+**This is not verified by `measure.py`.** The routing check is skipped for want of an assignment
+-group column in the benchmark export, so the change rests on the seven graded Login rows and
+direct tests of the two with recoverable text. Narrower evidence than a keyword change, and it
+should be re-checked when a routing-capable export exists.
+
+### Batch result after the corrections
+
+**Category 11/11, routing 11/11, priority 10/11.**
+
+### Priority is the weak field now, and the "never P2" finding is dead
+
+Across all 186 graded rows priority agrees **136/166 = 81.9%**, down from the 86% recorded at 110
+rows. The earlier note that *"across 110 graded tickets the reviewer has never once chosen P1 or
+P2"* no longer holds: **P2 has now been chosen twice**, both in this batch. P1 still never.
+
+Disagreements, largest first:
+
+```
+16  AI P4 -> human P3      10  AI P2 -> human P3      2  AI P2 -> human P4
+ 1  AI P3 -> human P4       1  AI P4 -> human P2
+```
+
+Two opposing errors, not one: the grid under-rates a large group of P3s as P4, and over-rates a
+smaller group as P2. That is not a matrix that needs shifting in one direction.
+
+The single miss this batch, INC0769459, shows the mechanism. The export supplies `Impact 4 - Low`,
+which with `Urgency 2 - High` grids to P4. The body says *"it is not only this customer. The
+problem exists with all customers and types of customers."* Per `priority-impact.csv` that is
+Impact **2**, "widespread issue". The supplied Impact contradicts the ticket's own words.
+
+**Not fixed.** Impact is explicitly a human decision, and overriding a supplied field from body
+text is exactly the kind of second-guessing that has cost accuracy before. The right move is to
+*surface* it — flag on Review when the body states a scope wider than the supplied Impact — and
+leave the grade alone. Recorded for a decision rather than done.

@@ -367,6 +367,46 @@ def xc_subtype_group(short_desc, description):
                            "services route to Portal; only telephony/OOMA/DID goes to Proton.")
 
 
+def _login_is_the_fault(short_desc, description):
+    """True when the ticket reports an authentication FAILURE, not just the word.
+
+    Of the 22 Login keywords, exactly one -- a bare 'login' -- can match a ticket
+    where signing in is incidental. Every other one names a failure: 'unable to
+    log in', 'account blocked', 'verification code', 'otp', 'password reset'.
+
+    That single bare token is what sent INC0769431 to Proton. Its title reads
+    'outage affecting Finland centres after reinstall and login' -- TeamHub is
+    down and agreements cannot be processed; reinstalling and logging in again
+    are steps the reporter had already tried. The reviewer graded the category
+    Login but routed it to Portal, because nothing about it is authentication.
+
+    Compare INC0769406, 'unable to log in to Customer Portal - account blocked',
+    which the reviewer sent to Proton: there the login IS the fault. Requiring a
+    specific keyword separates the two, and the mention-only case falls through
+    to the sheet, which is authoritative.
+
+    Note this deliberately does not use symptom_body(): INC0769431 matched on the
+    SHORT description, which carries no troubleshooting block to strip.
+    """
+    text = f"{short_desc or ''} {description or ''}".lower()
+    return any(k in text for k in LOGIN_FAULT_TERMS)
+
+
+# The Login keywords minus the bare 'login' token. Kept here rather than read
+# from categories.csv so that editing the category's keywords cannot silently
+# change routing -- a keyword added for classification should not move tickets
+# between teams without someone deciding that it should.
+LOGIN_FAULT_TERMS = (
+    "unable to login", "unable to log in", "cannot login", "can't log in",
+    "cannot log in", "logging in to myregus", "verification code", "otp",
+    "not receiving verification", "account needs activation", "account blocked",
+    "account showing blocked", "blocked in my regus", "password reset",
+    "account inactive", "account is inactive", "inactive in myregus",
+    "inactive account", "account activation", "activation/access is not working",
+    "marked as inactive", "unable to sign in", "cannot sign in",
+)
+
+
 def final_group(supplied, category, short_desc, description, learned, groups, signals):
     """THE group to use. If the sheet supplies one, that IS the answer.
 
@@ -387,7 +427,13 @@ def final_group(supplied, category, short_desc, description, learned, groups, si
         # (INC0767607). Every other override I attempted made routing worse, so
         # the exception is deliberately this narrow -- do not widen it without
         # measuring against a reviewed batch.
-        if category == "Login" and sup != "L2 - Proton":
+        # Narrowed 26 Aug after the scorecard graded INC0769431 as Login but
+        # routed it to Portal. Across every Login row the reviewer has graded,
+        # the override is right 6 times of 7; removing it would break six
+        # correct routings to fix one, so it stays -- but it now requires the
+        # login to be the FAULT, not a passing mention. See _login_is_the_fault.
+        if category == "Login" and sup != "L2 - Proton" \
+                and _login_is_the_fault(short_desc, description):
             return {"group": "L2 - Proton", "source": "owner rule: Login -> Proton (overrides sheet)",
                     "rule_said": rule["group"],
                     "note": f"Sheet said {sup}. Login category routes to Proton by standing rule."}
