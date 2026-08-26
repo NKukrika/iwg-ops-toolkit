@@ -700,3 +700,62 @@ webmaster message arrived twice, first with one office and then with both. That 
 duplication, not agreement state being wrong, and it matches no existing cluster or master. Left
 unclustered at a single occurrence rather than opening a cluster for one ticket. Worth watching:
 if a second arrives it is a genuine new cluster, not a member of the amend-agreement one.
+
+## Run of 26 Aug 2026 — 11 tickets, and a master matching on a troubleshooting tool
+
+**The renewals cluster reached 10.** INC0769490 is verbatim the cluster symptom — Meisha Adams
+enters a comment on a renewal team request, clicks Continue, gets *"An error occurred while
+trying to submit your request. Please log an IT Ticket."* Nine reporters, six batches, still no
+JIRA. The script's rule is `n > 10`, so 10 does **not** trip it and the sheet reads "1 more
+needed". It has sat at or near threshold since 19 Aug and is worth raising on the count alone.
+
+`[Bookings (Products)] Cannot rollback a booking terminated while provisional` went 3 → 5 on
+INC0769483 and INC0769513. **Both cite the same booking reference, 172355166**, under different
+reporters and company names, so they may be one occurrence reported twice — which would make the
+real count 4. Counted as two and flagged; nothing turns on it at this distance from 10.
+
+### A master matched on a tool name from the troubleshooting section
+
+INC0769494 — *"Wrong credit card is showing up on MyRegus"* — matched
+`[XC (Product and Services)] OOMA issues with DID` and was renamed to it. The only evidence was
+the single keyword **`callstream`**, which appears in the ticket solely as a step the agent took:
+*"Checked whether the affected record has a Titan ID in CallStream Manager."* CallStream Manager
+is an internal lookup tool, not a symptom.
+
+This is the "Troubleshooting attempted" trap again, but reaching through a **master keyword**
+rather than a category one, which makes it worse: rule 2 gives the master authority over the
+category, so a correct pipe hint of `Payments - Credit Card` was overridden by a false master.
+
+The evidence for removing it was unambiguous. Across the 3,716-ticket benchmark, `callstream`
+appears **once** — on an Invoicing ticket about charges aligned to the wrong company, with no
+OOMA, DID or call-answering wording and no MST tag. The keyword has never once identified an
+OOMA ticket. Removed; category and master both unchanged at 86.5% / 96.4%, and INC0769494 now
+classifies correctly as Payments - Credit Card at P3 rather than P4.
+
+**A bare tool name is not a symptom keyword.** Worth auditing the other masters for the same
+shape.
+
+### Two rows left wrong on purpose, because the fix is not a keyword
+
+INC0769416 and INC0769431 both classified as **Login**, which then routed them to **L2 - Proton**
+by the standing owner rule — overriding the group on the sheet, and reporting no mismatch because
+the override is by design.
+
+- **INC0769431** — *"TeamHub | Performance Issue | outage affecting Finland centres after
+  reinstall and login"*. The symptom is a TeamHub outage stopping agreement processing across
+  multiple Finland centres. "login" appears only as remediation the reporter already tried. This
+  is a **P2 multi-centre outage sitting in the wrong queue**, and it is the most operationally
+  serious error in the batch.
+- **INC0769416** — *"issues in Edicom - India ... invoices rejected and we are unable to log
+  in"*. Edicom is a third-party e-invoicing provider. The login is to **Edicom**, not to a
+  Proton-owned surface.
+
+Neither is a missing keyword: the word *login* is genuinely present in both, in the symptom text
+rather than a troubleshooting block, so stripping troubleshooting sections would not catch them.
+Fixing them means teaching Login to require an IWG authentication surface, or to yield when a
+concrete non-auth failure is also present — a `classify.py` change with wide reach, which
+BENCHMARK says to test against the benchmark rather than make mid-run.
+
+Recorded rather than fixed, and both flagged to the desk. **Because Login overrides the sheet, a
+category error here becomes a routing error** — the one place where getting the category wrong
+silently moves a ticket to another team.

@@ -89,15 +89,15 @@ CLUSTERS = {
         "note": "AT 7 AND GROWING. TWO DECISIONS OVERDUE: (1) the name says 'Invoices paid ... showing unpaid' but most members are payments and vouchers that never arrived at all - rename or split; (2) the registry master [SOA] Balance Mismatch competes for these tickets and has NO MST tag - allocate one and fold the cluster in, or scope the master's keywords.",
     },
     "[Renewals] Error submitting renewal team request in TeamHub": {
-        "cat": "Renewals", "ids": [],
+        "cat": "Renewals", "ids": ["INC0769490"],
         "terms": "submit your request; renewal team; send to customer; error occurred when trying to submit; an error occured while trying to submit your request; central renewal support; crt ticket",
-        "note": "NO JIRA COVERS THIS - checked 21 Aug. NOW 9 - ONE MORE CROSSES THE THRESHOLD. INC0768916 is 'connect to centralized renewals' erroring with 'place an IT ticket', the same handoff failure. Eight reporters across five batches. This should be raised with the TeamHub team now; the next occurrence makes it a master.",
+        "note": "NOW 10, ONE SHORT. The script's rule is n > 10, so 10 does not trip it - the next occurrence does. INC0769490 (Meisha Adams, account 16491933) cannot create a renewal team request: comment entered, Continue clicked, 'An error occurred while trying to submit your request. Please log an IT Ticket.' Verbatim the cluster symptom. Nine reporters across six batches, no JIRA covering it as of 21 Aug. This has been at or near threshold since 19 Aug and should be raised with the TeamHub team on the count alone rather than waiting for one more ticket.",
     },
     # Sibling of the above but a distinct symptom: the amendment ITSELF errors or
     # freezes, rather than the handoff to the renewals team failing.
     "[Renewals] Error when amending an agreement in TeamHub": {
         "cat": "Renewals",
-        "ids": ["INC0769090"],
+        "ids": [],
         "terms": "error occured when performing amend agreement; error occurred when performing amend agreement; unable to send renewal osa; teamhub freezes; something went wrong, please log an it ticket via teamhub; move agreement; renew recent termination; error occurred while renewing recent termination",
         "note": "NOW 5. INC0769090 (23 Aug) errors on Company > Amend agreement > Select booking(s) > Renew recent termination - the amendment itself failing, NOT the handoff to the renewals team, so it belongs here and not in the 9-count sibling above. Placing it there would have falsely crossed the 10 threshold. CATEGORY IS STILL AN OPEN QUESTION - bracketed [Renewals] provisionally. A resolved ticket worded 'Not able to amend agreement' is tagged XC (Product and Services), while the 14 Aug review put TeamHub amend/renew errors under Renewals. Also spans renewal amendments (INC0768485, INC0768499) and office/country moves (INC0768359, INC0768524) - may want splitting.",
     },
@@ -129,9 +129,9 @@ CLUSTERS = {
         "note": "CONFIRMED IN JIRA: TTN-143719 is Fixed and Ready For Release under R26.08.01, dated 2026-08-13 but NOT YET RELEASED. Both tickets are children of it and the fix is upstream - they should not be worked individually. INC0768932 (19 Aug) is the same defect's second symptom. Expect more until R26.08.01 ships.",
     },
     "[Bookings (Products)] Cannot rollback a booking terminated while provisional": {
-        "cat": "Bookings (Products)", "ids": [],
-        "terms": "rollback the termination; cannot rollback; unable to rollback; terminated while provisional; terminated while it was still provisional; greyed out; grayed out; edit/roll back option",
-        "note": "",
+        "cat": "Bookings (Products)", "ids": ["INC0769483", "INC0769513"],
+        "terms": "rollback the termination; cannot rollback; unable to rollback; terminated while provisional; terminated while it was still provisional; greyed out; grayed out; edit/roll back option; rollback the renewal; modify booking and edit booking are grayed out",
+        "note": "NOW 5. Both 26 Aug tickets cite the SAME booking reference 172355166 - INC0769483 (MTM renewal, needs the missed invoice raised) and INC0769513 (Office 104, different company name). They may be one occurrence reported twice rather than two, which would make the real count 4. Counted as two and flagged: the cluster is far from the threshold, so nothing turns on it yet, but resolve before it approaches 10.",
     },
     "[Bookings (Products) - Short Stay] Meeting room booking does not complete at the payment step": {
         "cat": "Bookings (Products) - Short Stay", "ids": [],
@@ -393,7 +393,7 @@ det = pd.DataFrame(detail)
 # to 21 Aug). Advance this line when a later run is reviewed -- leaving it behind
 # silently RESETS every cluster count to the older figure, which reads as normal
 # output. The guard below makes that visible instead.
-prev_file = os.environ.get("TRIAGE_TALLY_FROM", "runs/Triage_2026-08-21_v2.xlsx")
+prev_file = os.environ.get("TRIAGE_TALLY_FROM", "runs/Triage_2026-08-25.xlsx")
 if not os.path.exists(prev_file):
     sys.exit(f"""tally source missing: {prev_file}
   The Proposed Masters running count lives only inside that workbook.
