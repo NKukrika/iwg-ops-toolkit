@@ -170,6 +170,15 @@ CLUSTER_OF = {t: name for name, c in CLUSTERS.items() for t in c["ids"]}
 # is written from the body rather than drafted mechanically. UNCATEGORISED marks
 # a name that cannot be finalised until the category is decided.
 MANUAL_NAME = {
+    # 26 Aug. Both arrived as free-form email with no pipe structure, so the
+    # drafted name was the opening words truncated mid-sentence. Categories are
+    # the owner's ruling of 26 Aug.
+    "INC0769440": "[SOA] Titan balance requested for a list of accounts",
+    "INC0769568": "[XC (Product and Services)] Recurring charges not appearing on the immediate invoice",
+    # Same truncated-name problem, category not in dispute. INC0769416 has it too
+    # but is left alone: its Login category is flagged as wrong, and naming it
+    # would bake that in.
+    "INC0769409": "[Payments - Credit Card] Repeated attempts to add a credit card fail on app and website",
     # 21 Aug
     "INC0768805": "[Accounts and Companies] France customer data hotfix - phase 2",
     "INC0768846": "[UNCATEGORISED] Test ticket - no issue reported",
@@ -300,6 +309,19 @@ for _, s in src.iterrows():
             review.append((tid, "Name realigned",
                            f"Named '{PRIOR[tid]}' earlier. Now part of a tracked cluster, so it "
                            f"takes the shared name - rule 2 requires one issue, one name."))
+    # A hand-written name outranks one carried forward from an earlier run.
+    # These two were the other way round until 26 Aug, which made MANUAL_NAME
+    # unreachable for any ticket a previous run had already named: the owner
+    # corrected two truncated free-form names, the entries were added, and the
+    # run kept emitting the old drafted text because PRIOR was tested first.
+    # A human naming a ticket is the strongest signal there is; rule 2 still
+    # holds because the hand-written name is what later runs then carry forward.
+    elif tid in MANUAL_NAME:
+        new_sd, name_src = MANUAL_NAME[tid], "written by hand - free-form ticket"
+        if tid in PRIOR and PRIOR[tid] != new_sd:
+            review.append((tid, "Name replaced by hand",
+                           f"Earlier runs called this '{PRIOR[tid]}'. A MANUAL_NAME entry now "
+                           f"names it '{new_sd}', which takes precedence."))
     elif tid in PRIOR:
         new_sd, name_src = PRIOR[tid], "carried forward from an earlier run (unchanged)"
         want = "UNCATEGORISED" if cat == "Unclassified" else cat
@@ -310,8 +332,6 @@ for _, s in src.iterrows():
             review.append((tid, "Bracket realigned",
                            f"Kept the wording from '{PRIOR[tid]}' but the category is now "
                            f"'{cat}', so the bracket was corrected to match."))
-    elif tid in MANUAL_NAME:
-        new_sd, name_src = MANUAL_NAME[tid], "written by hand - free-form ticket"
     else:
         new_sd, name_src = C.propose_master_name(sd, cat)[0], "drafted from short description"
 

@@ -759,3 +759,55 @@ BENCHMARK says to test against the benchmark rather than make mid-run.
 Recorded rather than fixed, and both flagged to the desk. **Because Login overrides the sheet, a
 category error here becomes a routing error** — the one place where getting the category wrong
 silently moves a ticket to another team.
+
+## Owner corrections, 26 Aug 2026 — and a naming rule that made them unreachable
+
+Three rulings on the 26 Aug batch, all encoded and regression-tested.
+
+| Ticket | Was | Owner's ruling |
+|---|---|---|
+| INC0769440 | Unclassified | **SOA** |
+| INC0769560 | Unclassified | **Enquiry** — a new category |
+| INC0769568 | Unclassified | **XC (Product and Services)** |
+
+**`Enquiry` is a new category**, precedence 10, for Sales Hub enquiry state and transitions —
+cannot be set to WON, or locked after a prior status. Every keyword chosen for it returns **zero
+hits across the 3,716-ticket benchmark** (`sales hub enquiry`, `set enquiry to won`, `set to
+won`, `relivened`, `parent enquiry`, `child enquiry`), so a new precedence-10 category cannot
+steal rows from an existing one. Confirmed: category and master unchanged at 86.5% / 96.4%.
+
+The other two rulings were checked against the benchmark before encoding rather than taken on
+trust, and both are corroborated: `titan balance` appears once, tagged **SOA**; `recurring tab`
+appears three times, one tagged **XC (Product and Services)**. A third candidate, `immediate
+invoice`, was **rejected** — 25 tickets with no category consensus. Precision beats coverage.
+
+### The naming defect: a hand-written name could never win
+
+The owner also objected to INC0769440's short description, which read *"[SOA] Provide the Titan
+balance for the following accounts in"* — free-form email truncated mid-sentence. `MANUAL_NAME`
+entries were added, and the run kept emitting the old text.
+
+The branch order was:
+
+```
+if <cluster> ... elif tid in PRIOR ... elif tid in MANUAL_NAME ... else <drafted>
+```
+
+`PRIOR` holds names carried forward from earlier run workbooks. Any ticket a previous run had
+already named therefore hit `PRIOR` first, and **`MANUAL_NAME` was unreachable for it**. The
+entry was silently ignored, and only the bracket was realigned — which made it look like the
+correction had partly landed.
+
+That inverts the intent. A human naming a ticket is the strongest signal available; a drafted
+name carried forward is the weakest. `MANUAL_NAME` now sits above `PRIOR`, and an override
+against a differing prior name is recorded on the Review sheet. Rule 2 still holds — one issue,
+one name — because the hand-written name is what later runs carry forward.
+
+**This defect scales with age.** MANUAL_NAME worked when a ticket was named for the first time,
+so it looked correct in testing; it only failed on re-triage, which is exactly when a human is
+correcting something. Any earlier hand-written name added for an already-triaged ticket was
+also being discarded.
+
+INC0769409 was given a hand-written name at the same time — same truncation, category not in
+dispute. INC0769416 has the same problem and was deliberately left alone: its Login category is
+flagged as wrong above, and naming it would bake that in.
