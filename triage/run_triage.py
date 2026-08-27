@@ -182,6 +182,11 @@ MANUAL_NAME = {
     "INC0769779": "[Payments - Credit Card] Automatic payment failed and the registered card is no longer shown on MyRegus",
     "INC0769780": "[Invoicing] Rejected invoice needs reflecting on the account",
     "INC0769788": "[Bookings (Products)] Booking fails with a tax ID error although the account has a tax ID",
+    # Owner ruling 27 Aug: Quick Access, not Bookings. The authentication code is
+    # the WiFi code a customer is issued while a booking is active, so the booking
+    # reference is context for the code, not the subject of the fault. Named away
+    # from "Booking Reference" so the title stops implying otherwise.
+    "INC0769677": "[Quick Access] Authentication code not working for guest access on OTR",
     # 26 Aug. Both arrived as free-form email with no pipe structure, so the
     # drafted name was the opening words truncated mid-sentence. Categories are
     # the owner's ruling of 26 Aug.

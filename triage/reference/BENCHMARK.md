@@ -980,3 +980,37 @@ where the ID-stripping regex had also eaten part of the case reference. All ten 
   balance mismatches. The registry master of that name still has **no MST tag**, so it cannot
   claim them, and folding them into the D365-sync cluster would worsen the naming problem
   already recorded against it. Allocate the tag or scope the master's keywords.
+
+### Owner rulings on the 27 Aug batch
+
+**INC0769677 is Quick Access.** The owner supplied the domain fact the ticket does not state:
+the authentication code is the **WiFi code a customer is issued while a booking is active**. So
+the booking reference is context for the code, not the subject of the fault — and the code is
+access, not sign-in.
+
+Bare `authentication code` was still **not** added to Quick Access. It appears on 10 Login-tagged
+benchmark tickets, and Quick Access outranks Login on precedence, so adding it would have
+captured all ten. Inspecting those 17 tickets shows the split is by phrase shape, not by any
+mention of WiFi:
+
+```
+Quick Access   "error when trying to GET authentication code"   "authentication code EXPIRED"
+Login          "page STUCK ON authentication code"   "customer LOGS IN and gets..."
+               "not receiving VERIFICATION CODE OTP via email"
+```
+
+Encoded that shape — `get authentication code`, `authentication code expired`, `authentication
+code is not working`, `authentication code/booking reference`, and the WiFi variants — rather
+than the bare term. Category and master unchanged at 86.5% / 96.4%.
+
+Renamed away from the leading `Booking Reference`, which was what pulled it to Bookings in the
+first place.
+
+**Its priority moved P3 -> P4 as a side effect.** The shipped rule sends Quick Access to P4, and
+this ticket's `Impact 4 / Urgency 1` would otherwise grid to P3. That is the same rule that, in
+reverse, cost INC0769018 a grade on 26 Aug when its category moved *off* Quick Access. Flagged
+rather than special-cased: a category ruling silently regrades the priority, and the desk should
+see that it happened.
+
+**INC0769654 stays Unclassified**, confirmed correct by the owner pending a new category for
+tax and fiscal configuration. **INC0769721 confirmed correct** as Enquiry.
