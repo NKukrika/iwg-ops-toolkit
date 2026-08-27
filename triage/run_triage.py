@@ -89,7 +89,7 @@ CLUSTERS = {
         "note": "AT 7 AND GROWING. TWO DECISIONS OVERDUE: (1) the name says 'Invoices paid ... showing unpaid' but most members are payments and vouchers that never arrived at all - rename or split; (2) the registry master [SOA] Balance Mismatch competes for these tickets and has NO MST tag - allocate one and fold the cluster in, or scope the master's keywords.",
     },
     "[Renewals] Error submitting renewal team request in TeamHub": {
-        "cat": "Renewals", "ids": ["INC0769490"],
+        "cat": "Renewals", "ids": [],
         "terms": "submit your request; renewal team; send to customer; error occurred when trying to submit; an error occured while trying to submit your request; central renewal support; crt ticket",
         "note": "NOW 10, ONE SHORT. The script's rule is n > 10, so 10 does not trip it - the next occurrence does. INC0769490 (Meisha Adams, account 16491933) cannot create a renewal team request: comment entered, Continue clicked, 'An error occurred while trying to submit your request. Please log an IT Ticket.' Verbatim the cluster symptom. Nine reporters across six batches, no JIRA covering it as of 21 Aug. This has been at or near threshold since 19 Aug and should be raised with the TeamHub team on the count alone rather than waiting for one more ticket.",
     },
@@ -129,7 +129,7 @@ CLUSTERS = {
         "note": "CONFIRMED IN JIRA: TTN-143719 is Fixed and Ready For Release under R26.08.01, dated 2026-08-13 but NOT YET RELEASED. Both tickets are children of it and the fix is upstream - they should not be worked individually. INC0768932 (19 Aug) is the same defect's second symptom. Expect more until R26.08.01 ships.",
     },
     "[Bookings (Products)] Cannot rollback a booking terminated while provisional": {
-        "cat": "Bookings (Products)", "ids": ["INC0769483", "INC0769513"],
+        "cat": "Bookings (Products)", "ids": [],
         "terms": "rollback the termination; cannot rollback; unable to rollback; terminated while provisional; terminated while it was still provisional; greyed out; grayed out; edit/roll back option; rollback the renewal; modify booking and edit booking are grayed out",
         "note": "NOW 5. Both 26 Aug tickets cite the SAME booking reference 172355166 - INC0769483 (MTM renewal, needs the missed invoice raised) and INC0769513 (Office 104, different company name). They may be one occurrence reported twice rather than two, which would make the real count 4. Counted as two and flagged: the cluster is far from the threshold, so nothing turns on it yet, but resolve before it approaches 10.",
     },
@@ -170,6 +170,18 @@ CLUSTER_OF = {t: name for name, c in CLUSTERS.items() for t in c["ids"]}
 # is written from the body rather than drafted mechanically. UNCATEGORISED marks
 # a name that cannot be finalised until the category is decided.
 MANUAL_NAME = {
+    # 27 Aug. Free-form email or form-field openers, all of which draft into
+    # either a truncated sentence or a string of account numbers.
+    "INC0769635": "[XC (Product and Services)] Unable to amend upcoming invoice to end weekly mail forwarding",
+    "INC0769638": "[SOA] Regus opening balance does not match D365 and the SOA",
+    "INC0769647": "[Payments - Credit Card] Automatic card charging fails while manual portal payment succeeds",
+    "INC0769654": "[UNCATEGORISED] Titan requires a CIN for the Not GST Registered fiscal status in India",
+    "INC0769659": "[Documents] Unable to upload client files in TeamHub",
+    "INC0769701": "[SOA] Account balance shows paid on the invoice but still overdue",
+    "INC0769722": "[Staff - Attendance and Timeoff] Proton absence file not produced for PSHR since 13 August",
+    "INC0769779": "[Payments - Credit Card] Automatic payment failed and the registered card is no longer shown on MyRegus",
+    "INC0769780": "[Invoicing] Rejected invoice needs reflecting on the account",
+    "INC0769788": "[Bookings (Products)] Booking fails with a tax ID error although the account has a tax ID",
     # 26 Aug. Both arrived as free-form email with no pipe structure, so the
     # drafted name was the opening words truncated mid-sentence. Categories are
     # the owner's ruling of 26 Aug.
@@ -416,7 +428,7 @@ det = pd.DataFrame(detail)
 # to 21 Aug). Advance this line when a later run is reviewed -- leaving it behind
 # silently RESETS every cluster count to the older figure, which reads as normal
 # output. The guard below makes that visible instead.
-prev_file = os.environ.get("TRIAGE_TALLY_FROM", "runs/Triage_2026-08-25.xlsx")
+prev_file = os.environ.get("TRIAGE_TALLY_FROM", "runs/Triage_2026-08-26_v2.xlsx")
 if not os.path.exists(prev_file):
     sys.exit(f"""tally source missing: {prev_file}
   The Proposed Masters running count lives only inside that workbook.

@@ -916,3 +916,67 @@ Impact **2**, "widespread issue". The supplied Impact contradicts the ticket's o
 text is exactly the kind of second-guessing that has cost accuracy before. The right move is to
 *surface* it — flag on Review when the body states a scope wider than the supplied Impact — and
 leave the grade alone. Recorded for a decision rather than done.
+
+## Run of 27 Aug 2026 — 17 tickets, five keyword gaps, no new clusters
+
+Tally pin advanced to `Triage_2026-08-26_v2.xlsx`, the reviewer-graded run (category 11/11,
+routing 11/11). One registry master matched: INC0769774 to MST-71579 *Issue setting up default
+payment method*. **No cluster gained a member**, which is the correct outcome rather than a
+missing step — none of the 17 repeats a tracked symptom.
+
+### Five categories were falling through, four now fixed
+
+| Ticket | Was | Now |
+|---|---|---|
+| INC0769659 upload fails in TeamHub | Accounts and Companies *(pipe hint)* | **Documents** |
+| INC0769701 balance paid on invoice, still overdue | Unclassified | **SOA** |
+| INC0769722 Proton absence file not produced | Unclassified | **Staff - Attendance and Timeoff** |
+| INC0769780 rejected invoice | Unclassified | **Invoicing** |
+| INC0769677 guest code not working on OTR | Bookings (Products) | *unresolved — see below* |
+
+Every candidate keyword was probed against the benchmark first, and **two were rejected**:
+
+- **`authentication code`** splits **Login 10 / Quick Access 7** across 18 tickets. Genuinely
+  ambiguous in the desk's own labelling, so adding it to either category would encode a coin
+  toss.
+- **`unable to upload`** splits Documents 6 / Mobile 3 across 15. Used the precise phrases
+  instead (`uploading documents`, `upload client files`, `uploads fail`), all zero-hit and
+  therefore incapable of stealing an existing row.
+
+`balance mismatch` was also left alone: 87 tickets, SOA-dominant at 20 but far too broad.
+`showing as overdue` (zero hits) does the job for INC0769701 without the blast radius.
+
+Category and master unchanged at 86.5% / 96.4%.
+
+### INC0769677 is left wrong, because the evidence points two ways
+
+*"OTR | Authentication Issue | Authentication Code/Booking Reference is not working on OTR"*,
+body describing a guest code failing after ACA checks. It classified **Bookings (Products)**
+purely on `Booking Reference` in the title — a reference number the reporter quoted, not the
+fault. That much is clearly wrong.
+
+What is right is not clear. ACA is access control, which argues Quick Access; but the benchmark
+says `authentication code` leans **Login**, 10 to 7. Forcing either would be guessing at a
+domain distinction, so it is flagged for the desk rather than encoded.
+
+### Ten hand-written names
+
+Free-form email and form-field openers drafted into truncated sentences or strings of account
+numbers — INC0769788 produced *"12206491Company Name: Wocu Monitoring S.L.Case ID: C--R9T3"*,
+where the ID-stripping regex had also eaten part of the case reference. All ten replaced.
+
+### Open for the desk
+
+- **INC0769654** — Titan requires a CIN for the *Not GST Registered* fiscal status in India.
+  Unclassified, and no category obviously fits a tax-configuration rule. Needs a ruling.
+- **INC0769721** — the title says *"Unable to view enquiries assigned to me - No results found"*
+  while the body describes *"incorrect pricing and availability"*. Two different faults in one
+  ticket; the category `Enquiry` follows the title. Worth confirming which is real.
+- **INC0769610** — supplied `Impact 4 - Low`, but the body says the day-office booking failure
+  hits *"all the clients"* at Vienna Kohlmarkt. A single centre is impact **2** by
+  `priority-impact.csv`. Second batch running where the supplied Impact contradicts the ticket's
+  own words; see the INC0769459 note above. Still not overridden — impact is a human decision.
+- **The `[SOA] Balance Mismatch` decision is now overdue.** INC0769638 and INC0769701 are both
+  balance mismatches. The registry master of that name still has **no MST tag**, so it cannot
+  claim them, and folding them into the D365-sync cluster would worsen the naming problem
+  already recorded against it. Allocate the tag or scope the master's keywords.
