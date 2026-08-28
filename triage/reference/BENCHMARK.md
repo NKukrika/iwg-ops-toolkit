@@ -1127,3 +1127,57 @@ INC0769807 read as unclassifiable but is a card fault: a CC confirmation email s
 deducted when MYR 82.12 left the account, plus a double deduction the previous month.
 
 Final: **0 unclassified of 35**, 4 matched to registry masters, no cluster credited.
+
+### Owner ruling, 28 Aug: the short description must EXPLAIN the issue
+
+*"Short description needs to be a one line explanation of the issue, you just cut the words from
+what is already there."*
+
+Correct, and it is what the drafter does by design. `propose_master_name()` strips filler,
+labelled IDs and trailing clauses, then truncates. On a pipe-structured ticket that works,
+because the last pipe segment is already a one-line statement of the fault. On free-form email or
+a pasted error dump there is no such sentence to recover, so it returns the opening words:
+
+```
+[Invoicing] Related ticket INC0761699 /Hello Team,We encountered a recurring issue
+[Memberships] Davies Technology Solutions Limited () Membership account. The account
+[Invoicing] CROATIAERROR: Upload FailedINVOICES:7247-26--26--26--26--26--26-1879Please check
+[Payments - Credit Card] Jiseung Lim 0127 This client registered their credit card
+```
+
+The third also shows `LABELLED_ID` eating repeated invoice numbers mid-string and welding the
+remains together.
+
+**A trimmer cannot write an explanation** — it has no way to say what went wrong, only which
+words to drop. That is what `MANUAL_NAME` is for, and the correct conclusion is that hand-written
+names are the *normal* case for free-form tickets, not an exception for awkward ones. 27 of the
+35 rows in this batch are now written from the body:
+
+```
+was  [Invoicing] CROATIAERROR: Upload FailedINVOICES:7247-26--26--26-...
+now  [Invoicing] Croatia e-invoice upload failed for seven invoices
+
+was  [Payments - Credit Card] Investigate the below issue escalated by the centre team
+now  [Payments - Credit Card] Card confirmation email states an amount ten times what was
+     actually deducted
+```
+
+Writing them also surfaced two faults the trimmed names had hidden, because reading each body to
+summarise it is a check the pipeline cannot perform on itself.
+
+### A second master matching on incidental wording
+
+INC0769888 — *"MyRegus team setup mail forwarding screen blocked"* — matched
+`[Login] Account showing blocked in My Regus` (MST-71212) and took Login as its category. A
+**screen** was blocked, not an account.
+
+The keyword was `blocked in myregus`, which matches the body's "blocked in MyRegus team setup".
+Across the 3,716-ticket benchmark that exact string appears **zero** times; the spaced variant
+`blocked in my regus` appears twice and both are correctly MST-71212, and `account blocked` and
+`account showing blocked` remain. Removed the unspaced variant: it earned nothing and cost this.
+Master matching unchanged at 96.4%, and the ticket now reads XC (Product and Services), which is
+right — mail forwarding is a service.
+
+That is the second master this week matching on a word that is context rather than symptom, after
+`callstream` on the OOMA master. **Both were single loose keywords with no benchmark support.**
+The other 44 masters are worth auditing for the same shape.

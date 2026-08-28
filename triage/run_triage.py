@@ -183,7 +183,39 @@ CLUSTER_OF = {t: name for name, c in CLUSTERS.items() for t in c["ids"]}
 # is written from the body rather than drafted mechanically. UNCATEGORISED marks
 # a name that cannot be finalised until the category is decided.
 MANUAL_NAME = {
-    # 28 Aug. "manager of center 7889 are missing" drafted to "manager of are
+    # 28 Aug batch. Owner ruling: the short description must be a one-line
+    # EXPLANATION of the issue. propose_master_name() only trims -- it strips
+    # filler, IDs and trailing clauses and then truncates -- so on a free-form
+    # ticket or a pasted error dump it returns the opening words, not a summary.
+    # These are written from the body.
+    "INC0769798": "[Bookings (Products) - Short Stay] Meeting room booking fails with 'something went wrong' on app and website",
+    "INC0769801": "[SOA] Payment reversal in Dynamics never integrated to Titan, leaving the balances 582.43 GBP apart",
+    "INC0769804": "[SOA] MyRegus front end shows -1 JPY while Dynamics and the downloaded SOA both show zero",
+    "INC0769807": "[Payments - Credit Card] Card confirmation email states an amount ten times what was actually deducted",
+    "INC0769829": "[Memberships] Membership payments not collected despite a card registered in Titan",
+    "INC0769839": "[Invoicing] Invoice creation fails with an error when raising the invoice",
+    "INC0769842": "[Invoicing] Egypt ETA rejects invoices - certificate revocation status cannot be checked (4604)",
+    "INC0769843": "[Invoicing] Croatia e-invoice upload failed for seven invoices",
+    "INC0769844": "[Invoicing] Reissued credit note and replacement invoice both posted, unbalancing the account",
+    "INC0769846": "[Invoicing] Romania reissue posted both the credit note and the new invoice, so they need reposting as non-einvoice",
+    "INC0769850": "[Invoicing] Greece rejects invoices - stamp duty exceeds the sum of the correlated invoices",
+    "INC0769851": "[Invoicing] Panama rejects invoices as duplicate fiscal documents",
+    "INC0769853": "[Invoicing] Egypt ETA rejects credit notes - the referenced document is set to be rejected (DR321)",
+    "INC0769855": "[Invoicing] Greece late-payment-fee invoices stuck In Progress instead of succeeded",
+    "INC0769861": "[Payments - Credit Card] Card payments failed against a set of invoices",
+    "INC0769873": "[Invoicing] Romania invoices double-posted after a reissue and need posting as non-einvoice",
+    "INC0769877": "[Invoicing] Egypt invoice stuck at Pending To Be Processed instead of succeeded",
+    "INC0769879": "[Invoicing] Greece rejects invoices - VAT category missing from the invoice XML",
+    "INC0769880": "[Invoicing] Croatia invoices show as succeeded but the customer receives no e-invoice",
+    "INC0769883": "[Invoicing] Romania invoices stuck In Progress instead of succeeded",
+    "INC0769884": "[Invoicing] Malaysia invoices stuck In Progress instead of succeeded",
+    "INC0769888": "[XC (Product and Services)] Mail forwarding screen blocked in MyRegus team setup",
+    "INC0769899": "[Accounts and Companies] Identify who reinstated an account that had been closed for non-payment",
+    "INC0769966": "[Network devices] 333 incorrectly onboarded network devices cannot be removed from the account",
+    "INC0769986": "[Payments Registration] Add payment method page never finishes loading, so no card can be added",
+    "INC0770015": "[Payments - Credit Card] Payment failure email sent after the customer had already paid the August invoices",
+    "INC0770022": "[Payments - Credit Card] Automatic payment not taken on schedule despite a registered card",
+    # 28 Aug backlog pull. "manager of center 7889 are missing" drafted to "manager of are
     # missing" -- LABELLED_ID strips "center <digits>", which is right for a
     # trailing reference and wrong mid-sentence.
     "INC0764296": "[Accounts and Companies] Centre manager contact details missing from Sales Hub",

@@ -15,7 +15,7 @@ M013,[Bookings (Products)] Unable to send agreement from Preview OSA screen,Book
 M014,[Invoicing] Invoices not found on My Regus,Invoicing,MST-71217,invoices not found; invoice not found; invoices missing; invoices not showing; no invoices,,,,,Active,
 M015,[Login] Account is disabled or locked out,Login,MST - 003-25,account is disabled; locked out; account locked,,,,,Active,
 M016,[Login] Account needs activation,Login,MST - 002-25,account needs activation; needs activation; account marked as inactive; marked as inactive; account activation/access; activation/access is not working; account activation is not working; account is inactive,,,,,Active,
-M017,[Login] Account showing blocked in My Regus,Login,MST-71212,account showing blocked; account blocked; blocked in my regus; blocked in myregus,,,,KB0028442,Active,
+M017,[Login] Account showing blocked in My Regus,Login,MST-71212,account showing blocked; account blocked; blocked in my regus,,,,KB0028442,Active,
 M018,[Login] Change email address,Login,MST-70449,change email address; update email address; email address change,,,,,Active,
 M019,[Login] Client not receiving verification code for adding a team member on his email,Login,MST-70178,adding a team member; team member verification code; verification code for adding,,,,,Active,
 M020,[Login] Client not receiving verification code OTP via Email on Myregus,Login,MST-73683,otp via email; verification code otp; not receiving otp; verification code via email,,,,KB0028043,Active,
