@@ -6,6 +6,7 @@ CSU,L2 - Portal,,High,Confirmed by service owner: CSU sits with the Portal group
 Center setup,L2 - Titan,,Medium,Centre configuration and centre master data are Titan-side.,PROPOSED
 Contract API/Agreements,L2 - Titan,,High,"Agreements, pricing and termination are Titan records; Contract API is a Titan integration.",PROPOSED
 Documents,L2 - Portal,L2 - Titan,Medium,Upload and viewing happen in the portal. Route to Titan when the document exists in Titan but is not returned to the portal (see TTN-143451).,PROPOSED
+Enquiry,L2-Sales Apps Support,,Medium,"Sales Hub enquiry state. Both Sales Hub tickets the reviewer has graded (INC0769382, INC0769560) were assigned L2-Sales Apps Support. Without this row the category routed to NEEDS CONFIRMATION on any export lacking an assignment-group column.",PROPOSED
 Help and Inbox,L2 - Portal,,High,"In-portal help, inbox and chat surfaces are portal-owned.",PROPOSED
 Invoicing,L2 - Titan,L2 - Portal,Medium,Invoice generation and billing data are Titan. Route to Portal when the failure is a portal page error rather than wrong invoice data.,PROPOSED
 Login,L2 - Proton,L2 - Titan,Medium,"Authentication, OTP delivery and account verification are Proton/IAM. Cross to Titan when the cause is a userProfileId mismatch in dbo.ContactUserProfile - Proton cannot fix that side.",PROPOSED
@@ -20,6 +21,6 @@ Renewals,L2 - Titan,,Medium,"Renewal state, pricing and auto-renewal are Titan."
 Retainers,L2 - Titan,,High,Retainer balances and refunds are Titan billing records.,PROPOSED
 Roles and Permissions,L2 - Proton,L2 - Portal,Low,"Identity and permission assignment lean Proton, but 'cannot see option' is often a portal rendering problem. Confirm.",PROPOSED
 SOA,L2 - Titan,,High,Statement of account content comes from Titan billing data.,PROPOSED
-Staff - Attendance and Timeoff,L2 - Portal,,Medium,TeamHub staff features.,PROPOSED
 Services,L2 - Titan,,Medium,Service provisioning and entitlement are Titan records.,PROPOSED
+Staff - Attendance and Timeoff,L2 - Portal,,Medium,TeamHub staff features.,PROPOSED
 XC (Product and Services),L2 - Titan,,Medium,"XC services, OOMA/DID provisioning and parking are Titan-side product records.",PROPOSED

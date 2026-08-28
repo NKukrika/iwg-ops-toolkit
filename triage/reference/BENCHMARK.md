@@ -1014,3 +1014,60 @@ see that it happened.
 
 **INC0769654 stays Unclassified**, confirmed correct by the owner pending a new category for
 tax and fiscal configuration. **INC0769721 confirmed correct** as Enquiry.
+
+## Run of 28 Aug 2026 — a different export shape, and a feedback loop that erased a category
+
+Seven tickets, and **not the daily batch export**. This is an *In Progress* backlog pull: five of
+the seven already carry `TriagedTicket` tags from earlier runs, and the column set is the
+resolved/closed shape — **no `Assignment group`, no `Impact`**.
+
+### It crashed, and that was the right thing to notice
+
+`find_group_column` returned None and `s[gcol]` raised `KeyError: nan`. Fixed in three places, and
+the run now says up front what the missing columns cost it:
+
+- **Routing is rule-derived for every row.** "The group on the export wins" has nothing to defer
+  to, so the group column here is a *suggestion*, not a triage.
+- **Priority cannot be gridded at all** and every row is blank. Correct behaviour — impact is a
+  human decision and there is no impact to read — but a whole column of blanks looks like a bug
+  unless the run says why.
+
+### The feedback loop: our own names erase the category on re-triage
+
+INC0769721 was `Enquiry`, confirmed by the owner on 27 Aug. On re-triage it came back
+**Unclassified**.
+
+The desk writes the triaged name back into ServiceNow, so the ticket re-exported with *our* title:
+`[Enquiry] Error - No results found`. That string contains no Enquiry keyword — the word
+"enquiry" survives only inside the bracket we wrote — so classification found nothing and fell
+through.
+
+**Any ticket we name and then re-triage is exposed to this**, and it gets worse as more names are
+written back. The fix reads the leading `[Category]` bracket, placed deliberately **last** in the
+chain: a positive symptom match still wins, so it can only recover a category, never entrench an
+old one over fresh evidence.
+
+Measured, it is not just a fix for this batch — **category rises 86.5% -> 87.0%** (2049 -> 2063 of
+2370). Fourteen benchmark tickets were losing their category the same way.
+
+### Enquiry had no routing row
+
+Three rows came back `NEEDS CONFIRMATION`: the new `Enquiry` category was never added to
+`groups.csv`, so with no sheet value to fall back on there was nothing to route by. Added
+`Enquiry -> L2-Sales Apps Support`, which is what the reviewer assigned both graded Sales Hub
+tickets (INC0769382, INC0769560).
+
+**Not verifiable by `measure.py`** — the routing check is still skipped for want of an
+assignment-group column in the benchmark export. It rests on those two graded rows.
+
+**Adding a category means adding its routing row.** `Enquiry` was created on 26 Aug and this was
+missed; it stayed invisible for two runs because the sheet supplied the group both times.
+
+### Open
+
+- **INC0764296** is a Sales Hub ticket classified `Accounts and Companies` and therefore routed
+  `L2 - Portal`, not Sales Apps. Its subject is a missing centre-manager contact record, so the
+  category looks right and the routing follows from it — but the desk may want Sales Hub tickets
+  with Sales Apps regardless of category. Flagged, not forced.
+- Its drafted name was *"Contact details for the manager of are missing"* — `LABELLED_ID` strips
+  `center <digits>`, which is right for a trailing reference and wrong mid-sentence. Hand-named.

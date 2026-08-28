@@ -49,6 +49,19 @@ mst = {m["Master Name"]: m.get("MST Tag", "") for m in masters}
 src = pd.read_excel(SRC)
 gcol = C.find_group_column(src.columns)
 
+# The daily batch export carries Assignment group and Impact. The In Progress /
+# backlog export does not, and silently produces a whole run of rule-derived
+# groups and blank priorities that look like ordinary output. Say so once, up
+# front, because both columns change what the run can be trusted for.
+if not gcol:
+    print("  ! no assignment-group column in this export.\n"
+          "    Routing is RULE-DERIVED for every row -- the 'sheet wins' rule has\n"
+          "    nothing to defer to, so treat the group column as a suggestion.")
+if "Impact" not in src.columns:
+    print("  ! no Impact column in this export.\n"
+          "    Priority cannot be gridded; rows fall back to the default. Impact is\n"
+          "    a human decision, so do not read these grades as triaged.")
+
 
 def lvl(v):
     m = re.match(r"\s*(\d)", str(v))
@@ -170,6 +183,10 @@ CLUSTER_OF = {t: name for name, c in CLUSTERS.items() for t in c["ids"]}
 # is written from the body rather than drafted mechanically. UNCATEGORISED marks
 # a name that cannot be finalised until the category is decided.
 MANUAL_NAME = {
+    # 28 Aug. "manager of center 7889 are missing" drafted to "manager of are
+    # missing" -- LABELLED_ID strips "center <digits>", which is right for a
+    # trailing reference and wrong mid-sentence.
+    "INC0764296": "[Accounts and Companies] Centre manager contact details missing from Sales Hub",
     # 27 Aug. Free-form email or form-field openers, all of which draft into
     # either a truncated sentence or a string of account numbers.
     "INC0769635": "[XC (Product and Services)] Unable to amend upcoming invoice to end weekly mail forwarding",
@@ -288,7 +305,12 @@ for _, s in src.iterrows():
         if cat == "Unclassified":
             cat = C.classify_category(f"{sym} {C.symptom_body(desc)}", cats)[0]
 
-    g = C.final_group(s[gcol], cat, sd, desc, L, groups, signals)
+    # gcol is None when the export carries no assignment-group column at all --
+    # the In Progress / backlog exports do not. Passing None makes final_group
+    # fall through to the routing rule, which is the honest answer: with no
+    # sheet value there is nothing authoritative to defer to. Crashing here on
+    # s[None] is what it used to do instead.
+    g = C.final_group(s[gcol] if gcol else None, cat, sd, desc, L, groups, signals)
 
     # --- priority: matrix lookup on the SUPPLIED Impact/Urgency
     u, i = lvl(s.get("Urgency")), lvl(s.get("Impact"))
@@ -407,7 +429,7 @@ for _, s in src.iterrows():
         "New short description": new_sd, "Name source": name_src,
         "Category": cat, "Category source": r.get("source", ""),
         "Master": master or "", "Master confidence": r.get("confidence", ""),
-        "Group on export": s[gcol], "Group assigned": g["group"],
+        "Group on export": (s[gcol] if gcol else ""), "Group assigned": g["group"],
         "Group source": g.get("source", ""),
         "Impact (supplied)": s.get("Impact"), "Urgency (supplied)": s.get("Urgency"),
         "Priority": pri, "Priority source": psrc,
@@ -419,7 +441,7 @@ for _, s in src.iterrows():
         "Tags": ", ".join(tags), "State": s.get("State"),
     })
     if g.get("suggested") and C.canon_group(str(g["suggested"])) != C.canon_group(g["group"]):
-        mism.append({"TicketID": tid, "On export": s[gcol], "Rule suggests": g["suggested"],
+        mism.append({"TicketID": tid, "On export": (s[gcol] if gcol else ""), "Rule suggests": g["suggested"],
                      "Kept": g["group"], "Category": cat})
 
 fin = pd.DataFrame(rows)
@@ -433,7 +455,7 @@ det = pd.DataFrame(detail)
 # to 21 Aug). Advance this line when a later run is reviewed -- leaving it behind
 # silently RESETS every cluster count to the older figure, which reads as normal
 # output. The guard below makes that visible instead.
-prev_file = os.environ.get("TRIAGE_TALLY_FROM", "runs/Triage_2026-08-26_v2.xlsx")
+prev_file = os.environ.get("TRIAGE_TALLY_FROM", "runs/Triage_2026-08-27_v2.xlsx")
 if not os.path.exists(prev_file):
     sys.exit(f"""tally source missing: {prev_file}
   The Proposed Masters running count lives only inside that workbook.

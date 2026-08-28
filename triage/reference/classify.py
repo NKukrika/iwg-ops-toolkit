@@ -92,6 +92,23 @@ def load_groups(ref_dir=REF):
     return groups, signals
 
 
+def bracket_category(short_desc, cats):
+    """The category named in a leading '[Category] ...' bracket, if it is real.
+
+    Triaged names are written back into ServiceNow, so a re-exported ticket
+    arrives titled with the bracket this pipeline gave it. UNCATEGORISED is not
+    a category and returns None.
+    """
+    m = re.match(r"^\s*\[([^\]]+)\]", short_desc or "")
+    if not m:
+        return None
+    want = m.group(1).strip().lower()
+    for c in cats:
+        if c["Category"].strip().lower() == want:
+            return c["Category"]
+    return None
+
+
 def strip_pipe_prefix(short_desc):
     """Drop the leading pipe segments of a ServiceNow short description.
 
@@ -1148,7 +1165,21 @@ def triage_row(short_desc, description, cats, masters, kbas,
         if category == "Unclassified" and hint_cat:
             category, source = hint_cat, "pipe hint (fallback - symptom unclassifiable)"
         elif category == "Unclassified":
-            source = "none"
+            # A ticket we have already triaged comes back with OUR name as its
+            # short description, because the desk writes the triaged name into
+            # ServiceNow. '[Enquiry] Error - No results found' then carries no
+            # Enquiry keyword at all, and INC0769721 -- confirmed Enquiry by the
+            # owner one day earlier -- fell back to Unclassified on re-triage.
+            #
+            # The bracket is a category we (or the desk) already decided, so read
+            # it. Deliberately LAST: a positive symptom match still wins, so this
+            # can only recover a category, never entrench an earlier mistake over
+            # fresh evidence.
+            bracket = bracket_category(short_desc, cats)
+            if bracket:
+                category, source = bracket, "bracket from a previous triage"
+            else:
+                source = "none"
 
     # Owner rule: booking issues split by the surface they surface on.
     #   TeamHub        -> Bookings (Products)
