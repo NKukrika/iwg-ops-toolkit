@@ -1071,3 +1071,59 @@ missed; it stayed invisible for two runs because the sheet supplied the group bo
   with Sales Apps regardless of category. Flagged, not forced.
 - Its drafted name was *"Contact details for the manager of are missing"* — `LABELLED_ID` strips
   `center <digits>`, which is right for a trailing reference and wrong mid-sentence. Hand-named.
+
+## Run of 28 Aug 2026 (real batch) — 15 of 35 were unclassified, and why
+
+The first file supplied for 28 Aug was an *In Progress* backlog pull; it was replaced with the
+daily batch. The backlog run is kept as `Triage_2026-08-28_backlog*.xlsx` so it still supplies
+prior names without being mistaken for the day's triage.
+
+35 tickets. The first pass left **15 unclassified — 43% of the batch**. Almost all of one family.
+
+### Thirteen tax-authority clearance failures, and they need their own category
+
+Egypt, Croatia, Greece, Romania, Panama and Malaysia, all invoices rejected or stuck at a
+national e-invoicing authority: `[ETA error] Error Code: 4604`, `Upload Failed`, `Número del
+documento fiscal duplicado`, `IN PROGRESS - LPF invoices`, `Stamp duty amount of correlated
+invoice is exceeded`.
+
+**They were splitting five to Invoicing and eight to Unclassified on incidental wording** — the
+same fault reading two different ways depending on whether the reporter happened to write a
+sentence or paste an error dump.
+
+The benchmark says what the desk actually does with them, and it is not a category at all:
+
+```
+eta error                 25 tickets   no category tags
+in progress invoices       7 tickets   no category tags
+einvoice                  48 tickets   no category tags
+                          tagged instead: EI-19031, EI-18594, "Pending EI team", "ETA chased"
+```
+
+**These go to a dedicated E-Invoicing workstream and are never category-tagged.** That is why no
+category fits: the desk does not use one.
+
+**Proposed: an `E-Invoicing` category** for tax-authority clearance and submission failures. 13 in
+this batch alone, 48+ in the benchmark. This is the same shape as the printer decision and the
+tax/fiscal one raised for INC0769654 on 27 Aug — three categories now waiting on a ruling.
+
+Until then they are classified **Invoicing** as an interim, which is defensible under its own
+definition — *"invoice not raised, incorrect..."*, and an invoice rejected by a tax authority has
+not been raised. Recorded so the interim is not mistaken for a judgement that Invoicing is right.
+
+**They are NOT a cluster.** Thirteen tickets would trip the 10-ticket rule immediately, but a
+cluster is a claim that several tickets are *the same issue*, and these are six different
+countries with different authorities and error codes. Same class, not same fault. Filing them as
+one master would create a master nobody could act on.
+
+### The rest of the batch
+
+`balance mismatch` was finally added to SOA. It was rejected on 27 Aug as too broad — 87 tickets
+— but it is SOA-dominant at 20 with no rival, and measured it costs nothing: **category 87.0% ->
+87.1%**. Two more balance-mismatch tickets landed today (INC0769801, INC0769804), making four in
+two days, which makes the still-untagged `[SOA] Balance Mismatch` master more overdue, not less.
+
+INC0769807 read as unclassifiable but is a card fault: a CC confirmation email stated MYR 884.12
+deducted when MYR 82.12 left the account, plus a double deduction the previous month.
+
+Final: **0 unclassified of 35**, 4 matched to registry masters, no cluster credited.
