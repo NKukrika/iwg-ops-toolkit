@@ -937,13 +937,26 @@ def pipe_hint(short_desc, cats):
             return raw, proper
     # Loose token overlap only -- and only when it shares a real word. Without
     # this guard 'ServiceNow Support' resolved to an unrelated category.
+    # A SINGLE shared word is not a match. "Accounts & Access" shares one token
+    # with Quick Access and one with Accounts and Companies; "Products &
+    # Services" shares one with Bookings (Products) - Short Stay and one with XC
+    # (Product and Services). Both ties broke on precedence order, which is
+    # arbitrary, and both mis-hinted a live ticket (INC0769018, INC0770120).
+    # Requiring two shared words, and refusing to guess when the best score ties,
+    # returns None instead -- and None simply means the symptom text decides.
     r_tok = set(_tokens(raw))
-    best, best_n = None, 0
+    scored = []
     for low, proper in names.items():
         n = len(r_tok & set(_tokens(low)))
-        if n > best_n:
-            best, best_n = proper, n
-    return raw, (best if best_n >= 1 else None)
+        if n:
+            scored.append((n, proper))
+    if not scored:
+        return raw, None
+    best_n = max(n for n, _ in scored)
+    winners = [p for n, p in scored if n == best_n]
+    if best_n < 2 or len(winners) > 1:
+        return raw, None
+    return raw, winners[0]
 
 
 TRAILING_CLAUSE = re.compile(
@@ -1054,6 +1067,20 @@ TROUBLESHOOTING_BLOCK = re.compile(
     r"action\s+requested|steps\s+to\s+reproduce|company\s+id|account\s+(?:id|number|name)|"
     r"cent(?:re|er)\s+(?:number|name)|team\s+hub\s+version)\s*:|\Z)")
 
+# "the issue persists AFTER CHECKING the Statement of Account in the Customer
+# Portal for balance mismatch, incorrect payment status, or missing credit note"
+# -- a list of things the agent checked and RULED OUT, sitting in the Issue line
+# rather than under a Troubleshooting header, so TROUBLESHOOTING_BLOCK misses it.
+# It sent INC0770045 (invoice date/month shown opposite) and INC0770111 (SSRS
+# returning duplicate invoices) to SOA on wording neither ticket is about.
+#
+# Deliberately ONLY "after checking". "persists after reinstalling TeamHub,
+# logging in again" (INC0769431) is remediation the reporter performed, and the
+# reviewer graded that ticket Login on exactly those words -- stripping it would
+# break an owner-confirmed row.
+AFTER_CHECKING = re.compile(
+    r"(?is)\bafter\s+(?:checking|reviewing|verifying|confirming)\b[^.]*")
+
 FORM_FIELD_LINE = re.compile(
     r"(?im)^\s*\d*\.?\s*(?:company\s+id|account\s+(?:id|number)|cent(?:re|er)\s+(?:number|name)|"
     r"booking\s+reference(?:\s+number)?|team\s+hub\s+version|logged-?in\s+email|"
@@ -1079,6 +1106,7 @@ def symptom_body(description):
     """
     t = description or ""
     t = TROUBLESHOOTING_BLOCK.sub(" \n", t)
+    t = AFTER_CHECKING.sub(" ", t)
     t = FORM_FIELD_LINE.sub(" ", t)
     return t
 
@@ -1160,7 +1188,13 @@ def triage_row(short_desc, description, cats, masters, kbas,
         category, kw = classify_category(sym_text, cats)
         source = "symptom (short description)"
         if category == "Unclassified":
-            category, kw = classify_category(f"{sym_text} {description}", cats)
+            # symptom_body, not the raw description. The body fallback was
+            # reading the whole ticket including the sections that exist to say
+            # what is NOT wrong -- the Troubleshooting block, form-field lines,
+            # and "after checking X for Y" clauses. symptom_body strips all
+            # three, and was already written for exactly this but never wired in
+            # here, so the trap it documents kept firing through this path.
+            category, kw = classify_category(f"{sym_text} {symptom_body(description)}", cats)
             source = "symptom (description body)"
         if category == "Unclassified" and hint_cat:
             category, source = hint_cat, "pipe hint (fallback - symptom unclassifiable)"

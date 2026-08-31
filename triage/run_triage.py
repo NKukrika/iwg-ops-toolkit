@@ -183,6 +183,21 @@ CLUSTER_OF = {t: name for name, c in CLUSTERS.items() for t in c["ids"]}
 # is written from the body rather than drafted mechanically. UNCATEGORISED marks
 # a name that cannot be finalised until the category is decided.
 MANUAL_NAME = {
+    # 31 Aug batch, written from the bodies.
+    "INC0770024": "[Payments - Credit Card] Errors returned when uploading a credit card to the account",
+    "INC0770028": "[Payments Registration] Add payment method hangs on loading after the card details are entered",
+    "INC0770031": "[Payments - Credit Card] Payment failure notice and late fee raised against a partially paid invoice",
+    "INC0770041": "[Payments - Credit Card] Invoices missed by the monthly automatic card lift, causing late payment fees",
+    "INC0770045": "[Invoicing] Invoice date and month shown transposed in TeamHub and Titan",
+    "INC0770046": "[Contract API/Agreements] Cannot override the OSA after a centre move - no agreement found",
+    "INC0770083": "[Invoicing] France DGFiP rejects a credit note - buyer SIREN missing on a B2B note",
+    "INC0770111": "[Invoicing] SSRS returns multiple invoices for a single merchant reference",
+    "INC0770120": "[XC (Product and Services)] Mail handling service not showing on the customer account",
+    "INC0770177": "[CSU] Nayax posts duplicate coffee/tea charges despite an active Unlimited Coffee/Tea service",
+    "INC0770199": "[Payments - Credit Card] Card auto-pays at every centre except one, which also refuses manual payment",
+    "INC0770216": "[Payments - Credit Card] Cannot pay by card from the wallet and the card is not set as default",
+    "INC0770222": "[Payments - Direct Debit] Cannot set direct debit as the default payment method",
+    "INC0770223": "[Invoicing] Reissued credit note includes tax although the invoice is zero VAT",
     # 28 Aug batch. Owner ruling: the short description must be a one-line
     # EXPLANATION of the issue. propose_master_name() only trims -- it strips
     # filler, IDs and trailing clauses and then truncates -- so on a free-form
@@ -487,7 +502,7 @@ det = pd.DataFrame(detail)
 # to 21 Aug). Advance this line when a later run is reviewed -- leaving it behind
 # silently RESETS every cluster count to the older figure, which reads as normal
 # output. The guard below makes that visible instead.
-prev_file = os.environ.get("TRIAGE_TALLY_FROM", "runs/Triage_2026-08-27_v2.xlsx")
+prev_file = os.environ.get("TRIAGE_TALLY_FROM", "runs/Triage_2026-08-28_v3.xlsx")
 if not os.path.exists(prev_file):
     sys.exit(f"""tally source missing: {prev_file}
   The Proposed Masters running count lives only inside that workbook.

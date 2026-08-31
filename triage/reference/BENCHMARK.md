@@ -1181,3 +1181,65 @@ right — mail forwarding is a service.
 That is the second master this week matching on a word that is context rather than symptom, after
 `callstream` on the OOMA master. **Both were single loose keywords with no benchmark support.**
 The other 44 masters are worth auditing for the same shape.
+
+## Run of 31 Aug 2026 — a master-keyword audit, and three fixes that raised the benchmark
+
+22 tickets. Four rows were wrong on the first pass, all from the same cause as `callstream` and
+`blocked in myregus`: **a master keyword naming a noun the ticket merely mentions.**
+
+Wrote `audit_master_keywords.py` to find the shape systematically. For every keyword it counts
+benchmark tickets containing it and how many carry that master's own MST tag; a keyword that
+fires often while rarely coinciding with its own master is a false-positive generator.
+
+**The first run of the audit was itself misleading**, and the fix matters. Masters with no MST tag
+score 0% by construction — the benchmark cannot judge them — and `[SOA] Balance Mismatch`, which
+has no tag, dominated the output as if damning. The audit now skips untagged masters, and the
+report says plainly that a keyword naming a *symptom* is fine even when untagged rows dominate;
+only a tool, a place or a passing noun is the dangerous shape.
+
+Three keywords scoped, each of which had just mis-triaged a live ticket:
+
+| Keyword | Fires on | Own MST | Mis-matched |
+|---|---|---|---|
+| `wallet` | 34 | 3 (8.8%) | INC0770216, which is about *paying*, not deleting a card |
+| `linked account` | rare | — | INC0770177, Nayax charges *posted to* a linked account |
+| `balance mismatch` | 87 | untagged master | INC0770045 and INC0770111, both in troubleshooting narrative |
+
+Replaced with the masters' own symptoms (`delete the card from the wallet`, `find linked
+account`, `balance mismatch of the account`). **Category 87.1% -> 87.3%**, master matching
+unchanged at 96.4%.
+
+### Two long-standing defects fixed, both previously recorded and deferred
+
+**The pipe-hint tie-break.** Flagged on 26 Aug when `Accounts & Access` resolved to Quick Access
+on a single shared token. It happened again: `Products & Services` shares one token with
+`Bookings (Products) - Short Stay` and one with `XC (Product and Services)`, and precedence order
+decided. Now requires **two** shared tokens and refuses to guess when the best score ties —
+returning None, which simply means the symptom text decides. Costs nothing measured.
+
+**The body fallback was reading the raw description.** `symptom_body()` exists to strip the
+Troubleshooting block and form-field lines, and is documented as the fix for the 17 Aug trap —
+but `triage_row` never used it for the description-body fallback, so the trap kept firing through
+that path. Now wired in.
+
+Added to it: `after checking|reviewing|verifying|confirming ...` clauses. The template sentence
+*"the issue persists after checking the Statement of Account in the Customer Portal for balance
+mismatch, incorrect payment status, or missing credit note"* is a list of things **ruled out**,
+and it sent two tickets to SOA on wording neither is about.
+
+Scoped deliberately to those four verbs. *"persists after reinstalling TeamHub, logging in
+again"* is remediation the reporter performed, and the reviewer graded INC0769431 **Login** on
+exactly those words — a broader rule would have broken an owner-confirmed row. All five
+owner-confirmed categories were re-checked after each change and all hold.
+
+### Still open
+
+- **`[Retainers] Retainer issues` is too generic to be a name.** Three different faults — a
+  top-up issued incorrectly, a missing Request-retainer-return button, and a balance not
+  reflecting a transfer — all became children of it and all now read *"Retainer issues"*. Rule 2
+  says children share the master's name; the owner's 28 Aug ruling says the name must explain the
+  issue. **The master's own name is the problem**, and renaming or splitting it is the fix.
+- **INC0770093 and INC0770113 look like the same fault reported twice** — both are cimdata
+  Bildungsakademie GmbH with the wrong DID under Call Answering, and the body of the second says
+  "a new, separate unresolved issue". Both are children of the OOMA master, so nothing is
+  mis-triaged, but they may be one occurrence.
