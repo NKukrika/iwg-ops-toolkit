@@ -120,7 +120,7 @@ CLUSTERS = {
     # [SOA] Balance Mismatch competes for these and still has no MST tag.
     "[SOA] Duplicate or invalid posting in MyRegus needs reversing": {
         "cat": "SOA",
-        "ids": [],
+        "ids": ["INC0770297"],
         "terms": "duplicate posting; duplicate payment in myregus; reversing the invalid; invalid refund posting; duplicate refund; zero-out the amount; remove or zero-out; reflecting twice; posted twice",
         "note": "Five across three batches, all finance corrections in MyRegus. Sibling of the D365-sync cluster but the opposite direction - the record arrived twice or wrongly rather than not at all. If you would rather treat these as routine finance requests than defects, they can come off the tally.",
     },
@@ -183,6 +183,17 @@ CLUSTER_OF = {t: name for name, c in CLUSTERS.items() for t in c["ids"]}
 # is written from the body rather than drafted mechanically. UNCATEGORISED marks
 # a name that cannot be finalised until the category is decided.
 MANUAL_NAME = {
+    # 1 Sep batch, written from the bodies.
+    "INC0770021": "[SOA] Payment on the MyRegus SOA is not reflected in Dynamics Finance",
+    "INC0770231": "[Payments Registration] Cannot add a replacement card after the previous one was cancelled for fraud",
+    "INC0770242": "[SOA] Titan balance requested for the BGR2 accounts as at 31 August",
+    "INC0770253": "[SOA] Refund processed in WPAY although the credit note authorisation failed in Titan",
+    "INC0770291": "[Payments - Credit Card] Payment attempt fails although the balance reconciles across MyRegus, Dynamics and Titan",
+    "INC0770303": "[Contract API/Agreements] Enquiry not loaded into Titan, no profile created and Replay unavailable",
+    "INC0770319": "[SOA] Balance mismatch caused by an unposted invoice the hotfix did not cover",
+    "INC0770391": "[SOA] Invoice shows outstanding in Dynamics but already paid in MyRegus",
+    "INC0770401": "[Payments - Credit Card] Payment shows as declined although the bank receives no authorisation request",
+    "INC0770417": "[Memberships] Upfront 15% membership discount unavailable to some staff",
     # 31 Aug batch, written from the bodies.
     "INC0770024": "[Payments - Credit Card] Errors returned when uploading a credit card to the account",
     "INC0770028": "[Payments Registration] Add payment method hangs on loading after the card details are entered",
@@ -502,7 +513,7 @@ det = pd.DataFrame(detail)
 # to 21 Aug). Advance this line when a later run is reviewed -- leaving it behind
 # silently RESETS every cluster count to the older figure, which reads as normal
 # output. The guard below makes that visible instead.
-prev_file = os.environ.get("TRIAGE_TALLY_FROM", "runs/Triage_2026-08-28_v3.xlsx")
+prev_file = os.environ.get("TRIAGE_TALLY_FROM", "runs/Triage_2026-08-31_v2.xlsx")
 if not os.path.exists(prev_file):
     sys.exit(f"""tally source missing: {prev_file}
   The Proposed Masters running count lives only inside that workbook.

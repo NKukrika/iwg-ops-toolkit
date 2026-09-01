@@ -1243,3 +1243,51 @@ owner-confirmed categories were re-checked after each change and all hold.
   Bildungsakademie GmbH with the wrong DID under Call Answering, and the body of the second says
   "a new, separate unresolved issue". Both are children of the OOMA master, so nothing is
   mis-triaged, but they may be one occurrence.
+
+## Run of 1 Sep 2026 — 13 tickets, and a finance-reconciliation family the cluster cannot hold
+
+Eight of thirteen were unclassified on the first pass, nearly all free-form finance
+reconciliation. Twelve keywords closed them, every one probed against the benchmark first;
+**`marked as paid` was rejected** — 21 tickets split Invoicing 5 / Payments - Credit Card 3 /
+SOA 2, no consensus. Category unchanged at 87.3%, so the additions cost nothing.
+
+One cluster credited: INC0770297 (*"remove or zero-out the duplicate payment in MyRegus"*) joins
+`[SOA] Duplicate or invalid posting in MyRegus needs reversing`, now **6**.
+
+### Four more tickets the D365-sync cluster should probably hold, and deliberately does not
+
+INC0770021, INC0770319 and INC0770391 are all the same shape as the cluster
+`[SOA] Invoices paid in D365 still showing unpaid in MyRegus`, which sits at 7:
+
+```
+INC0770021  payment on the MyRegus SOA not reflected in Dynamics Finance
+INC0770391  invoice outstanding in Dynamics but already paid in MyRegus
+INC0770319  balance mismatch caused by an unposted invoice the hotfix did not cover
+```
+
+**Two of the three run in the opposite direction to the cluster's name** — paid in MyRegus and
+outstanding in Dynamics, not paid in D365 and unpaid in MyRegus. Adding them would take the count
+from 7 to 10 under a name that describes none of them, which is exactly what the cluster's own
+note has warned about since 18 Aug: *"the name says 'Invoices paid ... showing unpaid' but most
+members are payments and vouchers that never arrived at all — rename or split"*.
+
+**That decision is now blocking.** Three more arrived today, the cluster is three short of the
+threshold, and the next batch could push it over under the wrong name. Renaming it to something
+like *"[SOA] Payment or invoice state out of sync between MyRegus, Dynamics and Titan"* — or
+splitting it by direction — would let today's three be counted honestly. Until then they are
+category-tagged SOA and left out of the tally.
+
+The related `[SOA] Balance Mismatch` master still has **no MST tag**, so it cannot claim them
+either. Both decisions are the same knot.
+
+### Generic master names, second instance
+
+INC0770268 — *"Wi-Fi not visible for connectivity, everyone in the centre affected"* — is a child
+of `[Network devices] Network devices registration/login` and therefore reads as
+*"Network devices registration/login"*, which is not what happened. The category is right; the
+master's name is not a description of this ticket.
+
+That is the same problem as `[Retainers] Retainer issues` recorded on 31 Aug, and the audit
+independently flagged this master's `network device` keyword as firing on 12 benchmark tickets
+with **0** carrying its MST tag. **Two masters now need renaming or splitting** before rule 2 can
+give their children a name that explains anything.
