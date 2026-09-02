@@ -1291,3 +1291,50 @@ That is the same problem as `[Retainers] Retainer issues` recorded on 31 Aug, an
 independently flagged this master's `network device` keyword as firing on 12 benchmark tickets
 with **0** carrying its MST tag. **Two masters now need renaming or splitting** before rule 2 can
 give their children a name that explains anything.
+
+## Run of 2 Sep 2026 — 23 tickets, and the E-Invoicing case is now 20 tickets in four days
+
+**Seven more tax-authority clearance failures**: France (no source Location Number, on 8,972
+invoices), Portugal (recipient TIN incorrect), Poland (KSeF duplicate document), Finland (stuck In
+Progress), Malaysia (sent in Pagero, rejected in Titan), Egypt (DR317, quantity exceeds the
+referenced document) and Uganda (approved in EFRIS, not reflecting as succeeded).
+
+That is **20 across 28 Aug and 2 Sep**, plus 48+ in the benchmark, all still classified `Invoicing`
+as an interim. Two more providers appear today — **Pagero** and **KSeF** alongside Edicom and
+EFRIS — which is the clearest sign yet that this is a workstream and not a category: `pagero`
+alone is 18 benchmark tickets, none category-tagged. **The `E-Invoicing` category proposed on
+28 Aug should be decided.**
+
+### Probing stopped me getting one wrong
+
+INC0770441 — *"community meeting room not updated online"* — classified `Bookings (Products) -
+Short Stay` while its pipe hint said `Centre Setup`, and I was about to correct it to
+`Center setup`. The benchmark says otherwise: **`community meeting room` appears on 23 tickets,
+20 of them tagged Bookings (Products) - Short Stay** and one Center setup. The classifier was
+right and the hint was the misleading signal. Left alone.
+
+This is the second time this week the probe reversed my reading rather than confirming it. It is
+cheap and it should stay mandatory before any keyword change.
+
+### Six gaps closed
+
+`pagero`, `recipient tin is incorrect` and `duplicate document` to Invoicing; `enquiries routing`
+and `routing to new sales` to Enquiry — INC0770666 is a Sales Hub *enquiry routing* fault that
+had read as Bookings; `agreement signed but not loaded` to Contract API/Agreements, matching the
+INC0770303 ruling from the day before; `beginning balance` and `amount showing in the invoice
+copy` to SOA. Category unchanged at 87.3%.
+
+**A non-English ticket.** INC0770493's body is Portuguese — *"não consegue acessar o Team Hub e,
+por isso, não consegue enviar a renovação do cliente"*. Only the English pipe title was
+classifiable, and `unable to access team hub` has thin support (2 benchmark tickets, 1 tagged
+Login). Recorded as uncertain. **Nothing in the pipeline handles non-English bodies**, and this
+is the first one seen; if they are common the keyword tables cannot reach them at all.
+
+### Volume worth noticing
+
+**Four more DID / Call Answering tickets** (INC0770521, 523, 528, 551), all children of the OOMA
+master. With the three on 31 Aug that is **seven in three days**, every one a wrong DID under Call
+Answering Settings needing a manual correction. The master absorbs them so nothing is
+mis-triaged and no cluster is warranted — but seven identical manual corrections in three days is
+a defect signal the tally will never surface, because children of an existing master are not
+counted.

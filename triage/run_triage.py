@@ -120,7 +120,7 @@ CLUSTERS = {
     # [SOA] Balance Mismatch competes for these and still has no MST tag.
     "[SOA] Duplicate or invalid posting in MyRegus needs reversing": {
         "cat": "SOA",
-        "ids": ["INC0770297"],
+        "ids": [],
         "terms": "duplicate posting; duplicate payment in myregus; reversing the invalid; invalid refund posting; duplicate refund; zero-out the amount; remove or zero-out; reflecting twice; posted twice",
         "note": "Five across three batches, all finance corrections in MyRegus. Sibling of the D365-sync cluster but the opposite direction - the record arrived twice or wrongly rather than not at all. If you would rather treat these as routine finance requests than defects, they can come off the tally.",
     },
@@ -183,6 +183,22 @@ CLUSTER_OF = {t: name for name, c in CLUSTERS.items() for t in c["ids"]}
 # is written from the body rather than drafted mechanically. UNCATEGORISED marks
 # a name that cannot be finalised until the category is decided.
 MANUAL_NAME = {
+    # 2 Sep batch, written from the bodies. Seven more tax-authority clearance
+    # failures, each named by what the authority actually rejected.
+    "INC0770441": "[Bookings (Products) - Short Stay] Community meeting room 749 not published online at the Hyderabad centre",
+    "INC0770473": "[SOA] Ukraine account opening balance is in UAH while later entries are in USD",
+    "INC0770493": "[Login] Unable to access TeamHub, blocking a customer renewal",
+    "INC0770530": "[Invoicing] France rejects 8,972 invoices with no source Location Number",
+    "INC0770557": "[Quick Access] Centre team member cannot view the WorldKey PIN in TeamHub",
+    "INC0770561": "[SOA] Invoice copy amount differs from what is posted in D365 and MyRegus",
+    "INC0770570": "[Invoicing] Portugal rejects a credit note - recipient TIN incorrect and no longer in Edicom",
+    "INC0770571": "[Invoicing] Poland KSeF rejects an invoice as a duplicate document",
+    "INC0770572": "[Invoicing] Finland invoices stuck In Progress instead of succeeded",
+    "INC0770573": "[Invoicing] Malaysia invoices sent in Pagero but still rejected in Titan",
+    "INC0770575": "[Invoicing] Egypt ETA rejects an invoice - quantity exceeds the referenced document (DR317)",
+    "INC0770576": "[Invoicing] Uganda credit notes approved in EFRIS but not reflecting as succeeded",
+    "INC0770580": "[Contract API/Agreements] Signed membership agreement not loaded into Titan",
+    "INC0770666": "[Enquiry] LATIN meeting room enquiries routed to New Sales instead of the Meeting Room team",
     # 1 Sep batch, written from the bodies.
     "INC0770021": "[SOA] Payment on the MyRegus SOA is not reflected in Dynamics Finance",
     "INC0770231": "[Payments Registration] Cannot add a replacement card after the previous one was cancelled for fraud",
@@ -513,7 +529,7 @@ det = pd.DataFrame(detail)
 # to 21 Aug). Advance this line when a later run is reviewed -- leaving it behind
 # silently RESETS every cluster count to the older figure, which reads as normal
 # output. The guard below makes that visible instead.
-prev_file = os.environ.get("TRIAGE_TALLY_FROM", "runs/Triage_2026-08-31_v2.xlsx")
+prev_file = os.environ.get("TRIAGE_TALLY_FROM", "runs/Triage_2026-09-01_v2.xlsx")
 if not os.path.exists(prev_file):
     sys.exit(f"""tally source missing: {prev_file}
   The Proposed Masters running count lives only inside that workbook.
