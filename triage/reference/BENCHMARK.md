@@ -1400,3 +1400,80 @@ label. Category 87.3%, unchanged.
   be one fault.
 - **Three more DID / Call Answering tickets** (INC0770690, 843, 847). That is **ten in four
   days**, all children of the OOMA master and so invisible to the tally.
+
+## Training pass against the 314-row scorecard, 3 Sep 2026
+
+`score_against_scorecard.py` re-runs **today's** code over every graded ticket, rather than
+reading the scorecard's own `AI ·` columns, which record what the pipeline said on the day and
+so measure bugs already fixed. Text is recovered for 198 of 314 rows; the other 116 are reported
+as **uncovered, not dropped** — silently skipping them would flatter the score.
+
+| | Before | After |
+|---|---|---|
+| Category vs reviewer | 171/197 = 86.8% | **187/197 = 94.9%** |
+| Routing vs reviewer | 156/168 = 92.9% | 156/168 = 92.9% |
+| Category on the 3,716 benchmark | 87.3% | **87.3%** (unchanged) |
+
+### The rule I had been missing
+
+Six of the twenty-six category errors were one confusion: **`Payments - Credit Card` where the
+reviewer said `Payments Registration`**. The benchmark states the rule far more clearly than any
+single ticket does:
+
+```
+add a credit card        Payments Registration  7 : 1  Payments - Credit Card
+add card                 Payments Registration 16 : 3
+default payment method   Payments Registration 180 : 60
+not authorized                                  6    Payments - Credit Card
+payment failed                                  5    Payments - Credit Card
+```
+
+**Setting up a payment method is `Payments Registration`, whatever the instrument. `Payments -
+Credit Card` is a payment that failed.** The reviewer applied it to direct debit too —
+INC0770222, *"unable to set the DD as payment default"*, is Payments Registration, not
+Payments - Direct Debit — so the DD default wording moved as well.
+
+`Payments - Credit Card` carries the bare keyword `credit card`, which matches any mention
+including "cannot add a credit card"; strengthening Payments Registration's side of the
+distinction is what fixed it, rather than weakening a keyword the benchmark supports.
+
+**Two of the new keywords cost 14 benchmark rows and were withdrawn.** `unable to add` and
+`cannot add` are domain-agnostic — they fire on document uploads and service additions, and
+Payments Registration is precedence 10, so it captured them all. Replaced with card-scoped forms
+(`unable to add a card`, `cannot add a credit card`), which recovered the full benchmark score
+while keeping the scorecard gain. **Both sets have to be measured; the first version of this
+change looked like a win on one and a regression on the other.**
+
+### Nine coverage gaps, each named from its own body
+
+`not posted in myregus` (SOA), `not withdrawn automatically` and `auto payment has not been
+proceeded` (Payments - Credit Card), `none of the invoices were raised` and `has not sent invoice
+email` (Invoicing), `adding their card details` (Payments Registration), `showing active in otr`
+and `mac address` (Network devices), `cca self service` (XC), `day office membership` (Bookings
+- Short Stay).
+
+### Two reviewer verdicts contradict earlier verbal rulings — NOT resolved here
+
+- **INC0769677.** The owner said on 27 Aug: *"this should go under quick access since this is
+  authentication code for WiFi which they get when they have a valid booking active."* The
+  scorecard grades it **Bookings (Products)**. The pipeline still returns Quick Access, following
+  the spoken ruling.
+- **INC0769654.** The owner said *"we will need a new category for this, but leave it as it is
+  now"* — Unclassified. The scorecard grades it **Invoicing**, and the keywords added for the
+  other Invoicing gaps now classify it that way.
+
+Both are recorded rather than decided. **A spoken ruling and a graded scorecard are both the
+owner's word**, and where they disagree the pipeline should not pick silently.
+
+### A limitation of the scorer worth knowing
+
+It calls `triage_row` only, so **clusters and MANUAL_NAME are not applied**. INC0769483 reports
+as a Renewals-vs-Bookings miss, but in a real run it takes its cluster's category and is correct.
+Some reported misses are therefore artifacts of the harness, not live errors — the scorer
+measures the classifier, not the run.
+
+### Routing is at its practical ceiling
+
+The twelve routing misses run in **both directions** — six Portal to Titan, four Titan to Portal —
+and are the desk exercising judgement the ticket text does not carry. Encoding either direction
+would break the other. `Every routing error measured came from overriding the sheet` still holds.
