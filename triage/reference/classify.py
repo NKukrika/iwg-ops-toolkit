@@ -109,6 +109,13 @@ def bracket_category(short_desc, cats):
     return None
 
 
+GENERIC_ERROR = re.compile(
+    r"(?i)^\s*err(?:or)?\s*[-:]?\s*"
+    r"(?:something\s+went\s+wrong|no\s+results?\s+found|an?\s+error\s+occurred|"
+    r"please\s+try\s+again|unknown\s+error|technical\s+error|oops)"
+    r"[\s.!]*$")
+
+
 def strip_pipe_prefix(short_desc):
     """Drop the leading pipe segments of a ServiceNow short description.
 
@@ -119,8 +126,17 @@ def strip_pipe_prefix(short_desc):
     """
     if not is_pipe_structured(short_desc):
         return short_desc or ""
-    parts = [p.strip() for p in (short_desc or "").split("|")]
-    return parts[-1] if len(parts) > 1 else (short_desc or "")
+    parts = [p.strip() for p in (short_desc or "").split("|") if p.strip()]
+    if len(parts) < 2:
+        return short_desc or ""
+    # A trailing GENERIC error is the message, not the symptom -- the symptom is
+    # the segment before it. 15 of 85 pipe-structured tickets seen so far end
+    # this way, and they were being named "Error - Something went wrong" and
+    # classified on words that carry no signal. A SPECIFIC trailing error, such
+    # as "Error occurred during renewal processing", is kept.
+    if len(parts) > 2 and GENERIC_ERROR.match(parts[-1]):
+        return parts[-2]
+    return parts[-1]
 
 
 def is_pipe_structured(short_desc):
@@ -1002,9 +1018,12 @@ def propose_master_name(short_desc, category, max_words=9):
     This is a mechanical draft, not a final answer -- read it and refine the
     wording to the symptom before proposing it. Returns (name, draft_desc).
     """
-    text = (short_desc or "").strip()
-    if "|" in text:
-        text = text.split("|")[-1].strip()
+    # Reuse strip_pipe_prefix rather than splitting again here. It skips a
+    # trailing GENERIC error segment, which this function did not, so a ticket
+    # titled "... | Unable to amend renewal agreement | Error - Something went
+    # wrong" drafted as "Error - Something went wrong" -- a name that describes
+    # nothing. Two copies of the same pipe logic is how they drifted apart.
+    text = strip_pipe_prefix((short_desc or "").strip()).strip()
 
     # Some short descriptions are ALREADY in master-convention form, e.g.
     # "[Bookings (Products) - Short Stay] Issue with meeting room booking
@@ -1084,7 +1103,12 @@ AFTER_CHECKING = re.compile(
 FORM_FIELD_LINE = re.compile(
     r"(?im)^\s*\d*\.?\s*(?:company\s+id|account\s+(?:id|number)|cent(?:re|er)\s+(?:number|name)|"
     r"booking\s+reference(?:\s+number)?|team\s+hub\s+version|logged-?in\s+email|"
-    r"email\s+address|type\s+of\s+(?:ticket|request))\s*:.*$")
+    r"email\s+address|type\s+of\s+ticket)\s*:.*$")
+# NOTE: "type of request" is deliberately NOT stripped, though "type of ticket"
+# is. On the CNP/credit-card form the request line carries the whole symptom --
+# INC0770925's only statement of the fault is "Type of Request: Credit Card was
+# rejected or not authorized by the provider", and stripping it left the ticket
+# unclassifiable. "Type of Ticket: Customer" is a genuine metadata label.
 
 
 def symptom_body(description):

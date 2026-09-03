@@ -71,10 +71,19 @@ def lvl(v):
 # Rule 2 has to hold ACROSS runs, not just within one. A carried-over ticket
 # keeps the name it was already issued -- redrafting produced "Global Protect VPN
 # is not working" on 13 Aug and "...access issue" on 14 Aug for the same ticket.
-def prior_names(runs_dir="runs", exclude=()):
+def prior_names(runs_dir="runs", exclude=(), same_date=None):
+    """Names issued by EARLIER runs. Workbooks for the same date as this output
+    are skipped: they are superseded drafts of the run being produced now, not
+    history. Without this, a name written by a first pass -- including a bad one
+    the current pass was fixing -- is carried straight back in, because PRIOR
+    outranks the drafted name. INC0770701 kept the title "Error - Something went
+    wrong" through two rebuilds for exactly this reason."""
     out = {}
     for f in sorted(glob.glob(os.path.join(runs_dir, "*.xlsx")), key=os.path.getmtime):
-        if os.path.basename(f).startswith("~$") or os.path.abspath(f) in exclude:
+        base = os.path.basename(f)
+        if base.startswith("~$") or os.path.abspath(f) in exclude:
+            continue
+        if same_date and same_date in base:
             continue
         try:
             d = pd.read_excel(f, sheet_name="Finished Triage")
@@ -90,7 +99,9 @@ def prior_names(runs_dir="runs", exclude=()):
     return out
 
 
-PRIOR = prior_names(exclude={os.path.abspath(OUT)})
+_m = re.search(r"(\d{4}-\d{2}-\d{2})", os.path.basename(OUT))
+PRIOR = prior_names(exclude={os.path.abspath(OUT)},
+                    same_date=_m.group(1) if _m else None)
 
 # A cluster may ONLY exist for a symptom with no master in the registry. Check
 # every unmatched ticket against all 46 masters first -- one run proposed a new
@@ -110,7 +121,7 @@ CLUSTERS = {
     # freezes, rather than the handoff to the renewals team failing.
     "[Renewals] Error when amending an agreement in TeamHub": {
         "cat": "Renewals",
-        "ids": [],
+        "ids": ["INC0770844"],
         "terms": "error occured when performing amend agreement; error occurred when performing amend agreement; unable to send renewal osa; teamhub freezes; something went wrong, please log an it ticket via teamhub; move agreement; renew recent termination; error occurred while renewing recent termination",
         "note": "NOW 5. INC0769090 (23 Aug) errors on Company > Amend agreement > Select booking(s) > Renew recent termination - the amendment itself failing, NOT the handoff to the renewals team, so it belongs here and not in the 9-count sibling above. Placing it there would have falsely crossed the 10 threshold. CATEGORY IS STILL AN OPEN QUESTION - bracketed [Renewals] provisionally. A resolved ticket worded 'Not able to amend agreement' is tagged XC (Product and Services), while the 14 Aug review put TeamHub amend/renew errors under Renewals. Also spans renewal amendments (INC0768485, INC0768499) and office/country moves (INC0768359, INC0768524) - may want splitting.",
     },
@@ -183,6 +194,18 @@ CLUSTER_OF = {t: name for name, c in CLUSTERS.items() for t in c["ids"]}
 # is written from the body rather than drafted mechanically. UNCATEGORISED marks
 # a name that cannot be finalised until the category is decided.
 MANUAL_NAME = {
+    # 3 Sep batch, written from the bodies.
+    "INC0770694": "[Invoicing] Monthly invoices not issued or visible for customers across all Turkey centres",
+    "INC0770735": "[Payments - Credit Card] Account rejects a card for both the wallet and the default payment method",
+    "INC0770759": "[Bookings (Products)] Cannot book a day guest membership in TeamHub via OPS-Center",
+    "INC0770799": "[Contract API/Agreements] Signed membership agreement not findable in Sales Hub after the customer was charged",
+    "INC0770904": "[Retainers] Return of Retainer button missing for multiple eligible customers",
+    "INC0770918": "[Payments Registration] Retainer invoice left unpaid while the other invoices auto-paid",
+    "INC0770925": "[Payments - Credit Card] Card rejected or not authorised by the provider",
+    "INC0770938": "[Payments - Credit Card] Card rejected after six or seven attempts to add it to the account",
+    "INC0770939": "[Payments Registration] Cannot add a card to the wallet or set it as the centre default",
+    "INC0770949": "[Payments - Credit Card] Cannot replace an expired default card, with no failed attempt recorded in Pazien",
+    "INC0770952": "[Payments Registration] Account admin cannot set their credit card as the default payment method",
     # 2 Sep batch, written from the bodies. Seven more tax-authority clearance
     # failures, each named by what the authority actually rejected.
     "INC0770441": "[Bookings (Products) - Short Stay] Community meeting room 749 not published online at the Hyderabad centre",
@@ -529,7 +552,7 @@ det = pd.DataFrame(detail)
 # to 21 Aug). Advance this line when a later run is reviewed -- leaving it behind
 # silently RESETS every cluster count to the older figure, which reads as normal
 # output. The guard below makes that visible instead.
-prev_file = os.environ.get("TRIAGE_TALLY_FROM", "runs/Triage_2026-09-01_v2.xlsx")
+prev_file = os.environ.get("TRIAGE_TALLY_FROM", "runs/Triage_2026-09-02_v2.xlsx")
 if not os.path.exists(prev_file):
     sys.exit(f"""tally source missing: {prev_file}
   The Proposed Masters running count lives only inside that workbook.

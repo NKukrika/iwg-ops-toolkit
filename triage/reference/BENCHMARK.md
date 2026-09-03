@@ -1338,3 +1338,65 @@ Answering Settings needing a manual correction. The master absorbs them so nothi
 mis-triaged and no cluster is warranted — but seven identical manual corrections in three days is
 a defect signal the tally will never surface, because children of an existing master are not
 counted.
+
+## Run of 3 Sep 2026 — the naming pipeline was poisoning itself three ways
+
+18 tickets, 0 unclassified. One cluster credited: INC0770844 (*"renewal agreement cannot be sent
+to client"*) joins `[Renewals] Error when amending an agreement in TeamHub`, now **6**.
+
+The batch exposed three separate defects in how names are produced, all of which had been
+quietly degrading output.
+
+### 1. A trailing generic error segment was becoming the name
+
+`Team Hub| Amend agreement| Unable to amend renewal agreement| Error - Something went wrong`
+named the ticket *"Error - Something went wrong"*. The symptom is the segment **before** the
+error. **15 of the 85 pipe-structured tickets seen so far end this way** — 18%.
+
+`strip_pipe_prefix` now skips a trailing error only when it is **generic** (`something went
+wrong`, `no results found`, `please try again`, `an error occurred`). A specific one is kept:
+INC0769290's *"Error occurred during renewal processing"* names the failing process and survives.
+
+### 2. `propose_master_name` had its own copy of the pipe logic
+
+It split on `|` and took the last segment itself, so the fix above did not reach it and the name
+stayed *"Error - Something went wrong"* after the classifier had already moved on. It now calls
+`strip_pipe_prefix`. **Two copies of the same rule is how they drifted apart**, and the same
+shape has now appeared twice — `symptom_body` was likewise written and then not wired into the
+body fallback.
+
+### 3. The run was reading its own superseded output
+
+Even after both fixes INC0770701 kept the bad title, because `PRIOR` reads every workbook in
+`runs/` — including the **earlier passes of the same day**, which are drafts of the run being
+produced, not history. A bad name written by pass one was carried back in by pass three, since
+PRIOR outranks the drafted name. `prior_names` now skips workbooks whose filename carries the
+same date as the output.
+
+This is the third self-poisoning loop found in a week, after triaged names returning through
+ServiceNow (28 Aug) and `MANUAL_NAME` being unreachable behind `PRIOR` (26 Aug). **Anything that
+reads `runs/` is reading this pipeline's own opinions back.**
+
+### The build assertion earned its place
+
+`assert not bad, "bracket/category mismatch"` caught two hand-written names whose bracket
+disagreed with the computed category — mine, written minutes earlier. One was a wording call
+(INC0770759 is Bookings, not Memberships, once the generic error stopped masking the symptom).
+The other was a real bug:
+
+**`FORM_FIELD_LINE` was stripping the line that held the symptom.** On the CNP card form,
+INC0770925's only statement of the fault is *"Type of Request: Credit Card was rejected or not
+authorized by the provider"* — and the stripper removed it, leaving the ticket unclassifiable.
+`type of request` is now kept; `type of ticket` ("Customer") is still stripped, being a genuine
+label. Category 87.3%, unchanged.
+
+### Open
+
+- **INC0770701's title and body disagree.** The title says *"Unable to amend renewal agreement"*;
+  the body says Marcia Santos Maciel *"is unable to access Team Hub and, as a result, is unable
+  to submit the customer's renewal"*. That is an access failure, not an amendment failure — and
+  it is **the same reporter and issue as INC0770493 on 2 Sep**, which was classified Login.
+  Filed as Renewals on the title, flagged rather than silently re-read, and the two tickets may
+  be one fault.
+- **Three more DID / Call Answering tickets** (INC0770690, 843, 847). That is **ten in four
+  days**, all children of the OOMA master and so invisible to the tally.
