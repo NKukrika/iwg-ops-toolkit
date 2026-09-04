@@ -1477,3 +1477,38 @@ measures the classifier, not the run.
 The twelve routing misses run in **both directions** — six Portal to Titan, four Titan to Portal —
 and are the desk exercising judgement the ticket text does not carry. Encoding either direction
 would break the other. `Every routing error measured came from overriding the sheet` still holds.
+
+## Run of 4 Sep 2026 — first run after the training pass
+
+18 tickets, **0 unclassified**. One cluster credited: INC0771021 (*"MyRegus duplicate CN
+postings"*) joins `[SOA] Duplicate or invalid posting in MyRegus needs reversing`, now **7**.
+
+**The payments rule learned from the scorecard held on live tickets.** Six payment tickets in
+this batch, split the way the reviewer splits them:
+
+```
+Payments Registration   cannot enter any card on the portal   card registration fails
+                        uploading the autopay
+Payments - Credit Card  registered card details disappeared   payment failure notification
+                        automatic card payment failed for months
+```
+
+`input credit card` had to be added — the rule was right but that wording was not in the table.
+
+**`server error` was added to Login and immediately withdrawn.** 22 benchmark tickets, only 3
+tagged Login. It is the same over-broad shape that cost 14 rows during the training pass, caught
+this time before it shipped rather than after. Both sets held: benchmark 87.3%, scorecard 94.9%.
+
+The narrowed Login override also proved itself: INC0771149 (*"TITAN ISSUE (SERVER ERROR) ...
+trouble accessing the Titan application"*) classifies Login but carries no authentication-failure
+term, so the Proton override correctly did **not** fire and the sheet's `L2 - Titan` stood.
+
+### Still open, and now overdue
+
+- **`[Retainers] Retainer issues`** named a fourth ticket *"Retainer issues"* (INC0771057, a
+  client unable to enter an IBAN). Flagged since 31 Aug.
+- **Two more DID tickets** (INC0771063, INC0771172) — **twelve in five days**, all invisible to
+  the tally as children of the OOMA master.
+- **E-Invoicing**: Spain joins France, Portugal, Poland, Finland, Malaysia, Egypt, Uganda and
+  Croatia. Still filed under Invoicing as an interim.
+- The **D365-sync cluster rename** remains blocking at 7 with three uncounted tickets waiting.

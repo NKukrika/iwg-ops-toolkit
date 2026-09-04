@@ -121,7 +121,7 @@ CLUSTERS = {
     # freezes, rather than the handoff to the renewals team failing.
     "[Renewals] Error when amending an agreement in TeamHub": {
         "cat": "Renewals",
-        "ids": ["INC0770844"],
+        "ids": [],
         "terms": "error occured when performing amend agreement; error occurred when performing amend agreement; unable to send renewal osa; teamhub freezes; something went wrong, please log an it ticket via teamhub; move agreement; renew recent termination; error occurred while renewing recent termination",
         "note": "NOW 5. INC0769090 (23 Aug) errors on Company > Amend agreement > Select booking(s) > Renew recent termination - the amendment itself failing, NOT the handoff to the renewals team, so it belongs here and not in the 9-count sibling above. Placing it there would have falsely crossed the 10 threshold. CATEGORY IS STILL AN OPEN QUESTION - bracketed [Renewals] provisionally. A resolved ticket worded 'Not able to amend agreement' is tagged XC (Product and Services), while the 14 Aug review put TeamHub amend/renew errors under Renewals. Also spans renewal amendments (INC0768485, INC0768499) and office/country moves (INC0768359, INC0768524) - may want splitting.",
     },
@@ -131,7 +131,7 @@ CLUSTERS = {
     # [SOA] Balance Mismatch competes for these and still has no MST tag.
     "[SOA] Duplicate or invalid posting in MyRegus needs reversing": {
         "cat": "SOA",
-        "ids": [],
+        "ids": ["INC0771021"],
         "terms": "duplicate posting; duplicate payment in myregus; reversing the invalid; invalid refund posting; duplicate refund; zero-out the amount; remove or zero-out; reflecting twice; posted twice",
         "note": "Five across three batches, all finance corrections in MyRegus. Sibling of the D365-sync cluster but the opposite direction - the record arrived twice or wrongly rather than not at all. If you would rather treat these as routine finance requests than defects, they can come off the tally.",
     },
@@ -194,6 +194,17 @@ CLUSTER_OF = {t: name for name, c in CLUSTERS.items() for t in c["ids"]}
 # is written from the body rather than drafted mechanically. UNCATEGORISED marks
 # a name that cannot be finalised until the category is decided.
 MANUAL_NAME = {
+    # 4 Sep batch, written from the bodies.
+    "INC0770979": "[Payments Registration] Customer cannot enter any card on the MyRegus portal after four attempts",
+    "INC0771148": "[Payments - Credit Card] Registered card details disappeared from MyRegus between 1 and 15 August",
+    "INC0771011": "[Invoicing] Spain e-invoicing preparation - VAT number missing for domestic individuals in Titan",
+    "INC0771086": "[XC (Product and Services)] KA and PI services cannot be removed, so the customer is still charged",
+    "INC0771145": "[Payments - Credit Card] Payment failure notification sent although the client attempted no payment",
+    "INC0771149": "[Login] Server error prevents access to the Titan application",
+    "INC0771153": "[Payments Registration] Card registration fails for a new customer opportunity",
+    "INC0771155": "[Bookings (Products)] Meeting room booked but the card was never charged",
+    "INC0771157": "[Invoicing] No invoices found in SSRS or SQL for a transaction reference",
+    "INC0771176": "[Payments - Credit Card] Automatic card payment for the office rental has failed for several months",
     # 3 Sep batch, written from the bodies.
     "INC0770694": "[Invoicing] Monthly invoices not issued or visible for customers across all Turkey centres",
     "INC0770735": "[Payments - Credit Card] Account rejects a card for both the wallet and the default payment method",
@@ -552,7 +563,7 @@ det = pd.DataFrame(detail)
 # to 21 Aug). Advance this line when a later run is reviewed -- leaving it behind
 # silently RESETS every cluster count to the older figure, which reads as normal
 # output. The guard below makes that visible instead.
-prev_file = os.environ.get("TRIAGE_TALLY_FROM", "runs/Triage_2026-09-02_v2.xlsx")
+prev_file = os.environ.get("TRIAGE_TALLY_FROM", "runs/Triage_2026-09-03_v3.xlsx")
 if not os.path.exists(prev_file):
     sys.exit(f"""tally source missing: {prev_file}
   The Proposed Masters running count lives only inside that workbook.
