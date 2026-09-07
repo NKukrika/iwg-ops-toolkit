@@ -1512,3 +1512,46 @@ term, so the Proton override correctly did **not** fire and the sheet's `L2 - Ti
 - **E-Invoicing**: Spain joins France, Portugal, Poland, Finland, Malaysia, Egypt, Uganda and
   Croatia. Still filed under Invoicing as an interim.
 - The **D365-sync cluster rename** remains blocking at 7 with three uncounted tickets waiting.
+
+## Run of 7 Sep 2026 — an over-correction from the training pass, caught by live tickets
+
+20 tickets, 0 unclassified. `INC0771323` (*"Occupancy went from 7 to 4, but kitchen amenities
+remain charging an extra 3"*) joins `[Invoicing] KA backbill cannot be removed (TTN-143719)`,
+now **3** — the JIRA names occupancy-step amendments and Kitchen Amenities explicitly, so this is
+the tracked defect rather than a new one.
+
+**The export arrived in `runs/` instead of `for triage/`.** It survived only because
+`prior_names` wraps its read in try/except and skipped a workbook with no `Finished Triage`
+sheet. Moved. Worth knowing that the input and output folders are one typo apart.
+
+### Removing a keyword to satisfy one graded row broke two live ones
+
+The training pass dropped `unable to access team hub` from Login, because the scorecard grades
+INC0770493 as **Renewals**. Today two tickets arrived with exactly that title and no renewal
+content at all — INC0771216 (*"Team Hub does not work for four active users"*) and INC0771284
+(*"cannot access TeamHub and MyRegus"* after cache clearing and re-signing in). Both fell to
+Unclassified.
+
+The keyword is restored. INC0770493 is Renewals because its **body** says the user cannot submit
+a renewal, not because TeamHub access is a renewals concern — and Renewals is precedence 10
+against Login's 30, so a ticket carrying renewal wording still resolves Renewals. INC0770701,
+the same reporter and fault, does exactly that.
+
+**INC0770493 itself cannot be reproduced.** Its title alone — `Team Hub| Access| Unable to access
+Team Hub` — classifies Login, and the body is never consulted because the title already matched.
+Reaching the scorecard's answer would mean either dropping the keyword again, which breaks two
+tickets a week later, or reading the body even when the title classifies, which discards the
+"symptom first, short description first" rule measured at 83% against 71%.
+
+Taken deliberately: **-1 scorecard row, +2 correct today.** Scorecard 94.9% -> 94.4%, benchmark
+unchanged at 87.3%.
+
+The general lesson is worth more than the row: **a single graded ticket is not a rule.** The
+training pass was right to encode the payments distinction, which six rows and 250+ benchmark
+tickets supported, and wrong to encode this one, which rested on a single row whose evidence sits
+somewhere the classifier does not look.
+
+### Still open, unchanged
+
+`[Retainers] Retainer issues` (a fifth ticket would now take that name), the E-Invoicing category,
+the D365-sync cluster rename blocking at 7, and **two more DID tickets — fourteen in six days**.

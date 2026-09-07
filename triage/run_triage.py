@@ -131,7 +131,7 @@ CLUSTERS = {
     # [SOA] Balance Mismatch competes for these and still has no MST tag.
     "[SOA] Duplicate or invalid posting in MyRegus needs reversing": {
         "cat": "SOA",
-        "ids": ["INC0771021"],
+        "ids": [],
         "terms": "duplicate posting; duplicate payment in myregus; reversing the invalid; invalid refund posting; duplicate refund; zero-out the amount; remove or zero-out; reflecting twice; posted twice",
         "note": "Five across three batches, all finance corrections in MyRegus. Sibling of the D365-sync cluster but the opposite direction - the record arrived twice or wrongly rather than not at all. If you would rather treat these as routine finance requests than defects, they can come off the tally.",
     },
@@ -148,7 +148,7 @@ CLUSTERS = {
     # Two tickets both citing TTN-143719, the KA backbill defect.
     "[Invoicing] KA backbill cannot be removed (TTN-143719)": {
         "cat": "Invoicing",
-        "ids": [],
+        "ids": ["INC0771323"],
         "terms": "backbilled ka; ka backbill; backbilled ka cannot be removed; unnecessary ka fee; ka fee",
         "note": "CONFIRMED IN JIRA: TTN-143719 is Fixed and Ready For Release under R26.08.01, dated 2026-08-13 but NOT YET RELEASED. Both tickets are children of it and the fix is upstream - they should not be worked individually. INC0768932 (19 Aug) is the same defect's second symptom. Expect more until R26.08.01 ships.",
     },
@@ -194,6 +194,15 @@ CLUSTER_OF = {t: name for name, c in CLUSTERS.items() for t in c["ids"]}
 # is written from the body rather than drafted mechanically. UNCATEGORISED marks
 # a name that cannot be finalised until the category is decided.
 MANUAL_NAME = {
+    # 7 Sep batch, written from the bodies.
+    "INC0771216": "[Login] TeamHub does not work for four active users",
+    "INC0771253": "[Contract API/Agreements] Clients cannot open OSAs due to an error message",
+    "INC0771254": "[SOA] Original invoices rejected in Titan, leaving the account unreconciled",
+    "INC0771284": "[Login] User cannot access TeamHub or MyRegus after clearing cache and re-signing in",
+    "INC0771349": "[Payments - Credit Card] Account shows a negative balance and an unpaid invoice at the same time",
+    "INC0771373": "[Payments Registration] Assistance requested registering a customer card",
+    "INC0771384": "[Invoicing] Kenya invoice logo overrides the tax details, so the customer will not pay",
+    "INC0771387": "[SOA] Titan data access needed for franchise balance reconciliation",
     # 4 Sep batch, written from the bodies.
     "INC0770979": "[Payments Registration] Customer cannot enter any card on the MyRegus portal after four attempts",
     "INC0771148": "[Payments - Credit Card] Registered card details disappeared from MyRegus between 1 and 15 August",
@@ -563,7 +572,7 @@ det = pd.DataFrame(detail)
 # to 21 Aug). Advance this line when a later run is reviewed -- leaving it behind
 # silently RESETS every cluster count to the older figure, which reads as normal
 # output. The guard below makes that visible instead.
-prev_file = os.environ.get("TRIAGE_TALLY_FROM", "runs/Triage_2026-09-03_v3.xlsx")
+prev_file = os.environ.get("TRIAGE_TALLY_FROM", "runs/Triage_2026-09-04_v3.xlsx")
 if not os.path.exists(prev_file):
     sys.exit(f"""tally source missing: {prev_file}
   The Proposed Masters running count lives only inside that workbook.
