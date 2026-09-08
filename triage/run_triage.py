@@ -199,7 +199,7 @@ MANUAL_NAME = {
     "INC0771400": "[Invoicing] Billing address in the online account does not match Titan",
     "INC0771511": "[Login] User cannot log in to the printer after a domain change from regus to hq",
     "INC0771480": "[XC (Product and Services)] IT service charges billed against the negotiated terms",
-    "INC0771488": "[UNCATEGORISED] TeamHub not loading for multiple users - blank screen and agreements cannot be sent",
+    "INC0771488": "[Renewals] TeamHub not loading for multiple users - blank screen and agreements cannot be sent",
     "INC0771536": "[Invoicing] Charges for 1-7 September still missing after the workaround",
     # 7 Sep batch, written from the bodies.
     "INC0771216": "[Login] TeamHub does not work for four active users",

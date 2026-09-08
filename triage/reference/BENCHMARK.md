@@ -1595,3 +1595,18 @@ Its title says *"Unable to amend agreement"* but the body describes **TeamHub no
 That is a TeamHub availability incident, not an amendment fault, so it is **not** in the
 amend-agreement cluster despite the matching title. Named by hand from the body and flagged: if
 it is an outage it deserves a higher impact than the supplied `4 - Low`.
+
+### Owner ruling, 8 Sep: "Unable to amend agreement" is Renewals
+
+Settles the question the amend-agreement cluster note has carried since 18 Aug. The ruling
+**overrides the benchmark**, where the three tickets with that wording are tagged
+`XC (Product and Services)` 2 and `Bookings` 1 — older labelling the owner is correcting. Cost
+taken knowingly: category 87.3% -> 87.2%, scorecard unchanged at 94.4%.
+
+Six forms encoded (`unable to amend agreement`, `not able to amend agreement`, `cannot amend
+agreement`, `unable to amend renewal agreement`, `unable to amend upcoming renewal`). The cluster
+bracket `[Renewals]` is now supported by a ruling rather than provisional.
+
+INC0771488 becomes Renewals by that rule. It is still **not** in the amend-agreement cluster: its
+body describes TeamHub not loading for multiple users, which is an availability incident that
+happens to carry an amendment title.
