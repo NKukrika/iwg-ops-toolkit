@@ -1555,3 +1555,43 @@ somewhere the classifier does not look.
 
 `[Retainers] Retainer issues` (a fifth ticket would now take that name), the E-Invoicing category,
 the D365-sync cluster rename blocking at 7, and **two more DID tickets — fourteen in six days**.
+
+## Run of 8 Sep 2026 — the trailing-error rule generalised, and evidence on the amend-agreement question
+
+12 tickets. Two clusters credited: INC0771490 joins `[Renewals] Error when amending an agreement
+in TeamHub` (now **7**) and INC0771499 joins `[Bookings (Products)] Cannot rollback a booking
+terminated while provisional` (now **6**).
+
+### The trailing-error rule was list-based and too narrow
+
+3 Sep's fix listed specific generic errors. Three tickets today ended with errors not on that
+list — `Error - Blank screen - Screen not loading` (twice) and `Error - There was a problem
+updating enquiry` — and were named after them, while the segment before said *"Unable to amend
+agreement"*, *"Unable to amend upcoming renewal"* and *"Unable to allocate or reassign a Tour"*.
+
+Replaced with a rule rather than a list: **if the last segment opens with "Error" and the
+previous segment STATES A FAULT** (`unable to`, `cannot`, `no …`, `missing`, `incorrect`,
+`failed`), take the previous. INC0769290 still keeps its trailing *"Error occurred during renewal
+processing"*, because the segment before it is the area label *"Amend an agreement"* — there the
+error is the more informative half. Both sets unchanged.
+
+### Direct evidence on the amend-agreement category, open since 18 Aug
+
+INC0771488's title is *"Unable to amend agreement"*, so `unable to amend agreement` was added to
+Renewals to match the cluster's bracket. **The benchmark rejected it**: three tickets carry that
+wording and they are tagged **XC (Product and Services) 2, Bookings 1 — none Renewals** — and the
+benchmark fell 87.3% -> 87.2%. Reverted.
+
+This is the first measurement on a question the cluster note has carried since 18 Aug: *"a
+resolved ticket worded 'Not able to amend agreement' is tagged XC (Product and Services), while
+the 14 Aug review put TeamHub amend/renew errors under Renewals."* The resolved data now says
+**XC** on the only wording that can be tested. The cluster remains bracketed `[Renewals]` and
+INC0771488 stays Unclassified rather than being forced either way.
+
+### INC0771488 left Unclassified on purpose
+
+Its title says *"Unable to amend agreement"* but the body describes **TeamHub not loading at all**
+— multiple users, blank screens, *"cannot access anything"*, others unable to send agreements.
+That is a TeamHub availability incident, not an amendment fault, so it is **not** in the
+amend-agreement cluster despite the matching title. Named by hand from the body and flagged: if
+it is an outage it deserves a higher impact than the supplied `4 - Low`.

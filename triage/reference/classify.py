@@ -109,11 +109,14 @@ def bracket_category(short_desc, cats):
     return None
 
 
-GENERIC_ERROR = re.compile(
-    r"(?i)^\s*err(?:or)?\s*[-:]?\s*"
-    r"(?:something\s+went\s+wrong|no\s+results?\s+found|an?\s+error\s+occurred|"
-    r"please\s+try\s+again|unknown\s+error|technical\s+error|oops)"
-    r"[\s.!]*$")
+GENERIC_ERROR = re.compile(r"(?i)^\s*err(?:or)?\b")
+
+# A previous segment that STATES A FAULT is a better name than any trailing
+# error string. Where the previous segment is only an area label ("Amend an
+# agreement"), the trailing error is the more informative half and is kept.
+FAULT_OPENER = re.compile(
+    r"(?i)^\s*(?:unable\s+to|cannot|can't|could\s+not|couldn't|not\s+able|"
+    r"no\s+\w+|missing|incorrect|wrong|duplicate|failed|fails|failing)\b")
 
 
 def strip_pipe_prefix(short_desc):
@@ -134,7 +137,7 @@ def strip_pipe_prefix(short_desc):
     # this way, and they were being named "Error - Something went wrong" and
     # classified on words that carry no signal. A SPECIFIC trailing error, such
     # as "Error occurred during renewal processing", is kept.
-    if len(parts) > 2 and GENERIC_ERROR.match(parts[-1]):
+    if len(parts) > 2 and GENERIC_ERROR.match(parts[-1]) and FAULT_OPENER.match(parts[-2]):
         return parts[-2]
     return parts[-1]
 

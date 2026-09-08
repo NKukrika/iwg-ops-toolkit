@@ -121,7 +121,7 @@ CLUSTERS = {
     # freezes, rather than the handoff to the renewals team failing.
     "[Renewals] Error when amending an agreement in TeamHub": {
         "cat": "Renewals",
-        "ids": [],
+        "ids": ["INC0771490"],
         "terms": "error occured when performing amend agreement; error occurred when performing amend agreement; unable to send renewal osa; teamhub freezes; something went wrong, please log an it ticket via teamhub; move agreement; renew recent termination; error occurred while renewing recent termination",
         "note": "NOW 5. INC0769090 (23 Aug) errors on Company > Amend agreement > Select booking(s) > Renew recent termination - the amendment itself failing, NOT the handoff to the renewals team, so it belongs here and not in the 9-count sibling above. Placing it there would have falsely crossed the 10 threshold. CATEGORY IS STILL AN OPEN QUESTION - bracketed [Renewals] provisionally. A resolved ticket worded 'Not able to amend agreement' is tagged XC (Product and Services), while the 14 Aug review put TeamHub amend/renew errors under Renewals. Also spans renewal amendments (INC0768485, INC0768499) and office/country moves (INC0768359, INC0768524) - may want splitting.",
     },
@@ -148,12 +148,12 @@ CLUSTERS = {
     # Two tickets both citing TTN-143719, the KA backbill defect.
     "[Invoicing] KA backbill cannot be removed (TTN-143719)": {
         "cat": "Invoicing",
-        "ids": ["INC0771323"],
+        "ids": [],
         "terms": "backbilled ka; ka backbill; backbilled ka cannot be removed; unnecessary ka fee; ka fee",
         "note": "CONFIRMED IN JIRA: TTN-143719 is Fixed and Ready For Release under R26.08.01, dated 2026-08-13 but NOT YET RELEASED. Both tickets are children of it and the fix is upstream - they should not be worked individually. INC0768932 (19 Aug) is the same defect's second symptom. Expect more until R26.08.01 ships.",
     },
     "[Bookings (Products)] Cannot rollback a booking terminated while provisional": {
-        "cat": "Bookings (Products)", "ids": [],
+        "cat": "Bookings (Products)", "ids": ["INC0771499"],
         "terms": "rollback the termination; cannot rollback; unable to rollback; terminated while provisional; terminated while it was still provisional; greyed out; grayed out; edit/roll back option; rollback the renewal; modify booking and edit booking are grayed out",
         "note": "NOW 5. Both 26 Aug tickets cite the SAME booking reference 172355166 - INC0769483 (MTM renewal, needs the missed invoice raised) and INC0769513 (Office 104, different company name). They may be one occurrence reported twice rather than two, which would make the real count 4. Counted as two and flagged: the cluster is far from the threshold, so nothing turns on it yet, but resolve before it approaches 10.",
     },
@@ -194,6 +194,13 @@ CLUSTER_OF = {t: name for name, c in CLUSTERS.items() for t in c["ids"]}
 # is written from the body rather than drafted mechanically. UNCATEGORISED marks
 # a name that cannot be finalised until the category is decided.
 MANUAL_NAME = {
+    # 8 Sep batch, written from the bodies.
+    "INC0771413": "[Memberships] Two membership clients charged an unjustified amount on 20 August",
+    "INC0771400": "[Invoicing] Billing address in the online account does not match Titan",
+    "INC0771511": "[Login] User cannot log in to the printer after a domain change from regus to hq",
+    "INC0771480": "[XC (Product and Services)] IT service charges billed against the negotiated terms",
+    "INC0771488": "[UNCATEGORISED] TeamHub not loading for multiple users - blank screen and agreements cannot be sent",
+    "INC0771536": "[Invoicing] Charges for 1-7 September still missing after the workaround",
     # 7 Sep batch, written from the bodies.
     "INC0771216": "[Login] TeamHub does not work for four active users",
     "INC0771253": "[Contract API/Agreements] Clients cannot open OSAs due to an error message",
@@ -572,7 +579,7 @@ det = pd.DataFrame(detail)
 # to 21 Aug). Advance this line when a later run is reviewed -- leaving it behind
 # silently RESETS every cluster count to the older figure, which reads as normal
 # output. The guard below makes that visible instead.
-prev_file = os.environ.get("TRIAGE_TALLY_FROM", "runs/Triage_2026-09-04_v3.xlsx")
+prev_file = os.environ.get("TRIAGE_TALLY_FROM", "runs/Triage_2026-09-07_v2.xlsx")
 if not os.path.exists(prev_file):
     sys.exit(f"""tally source missing: {prev_file}
   The Proposed Masters running count lives only inside that workbook.
