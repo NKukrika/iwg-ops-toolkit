@@ -115,7 +115,7 @@ CLUSTERS = {
     "[Renewals] Error submitting renewal team request in TeamHub": {
         "cat": "Renewals", "ids": [],
         "terms": "submit your request; renewal team; send to customer; error occurred when trying to submit; an error occured while trying to submit your request; central renewal support; crt ticket",
-        "note": "NOW 10, ONE SHORT. The script's rule is n > 10, so 10 does not trip it - the next occurrence does. INC0769490 (Meisha Adams, account 16491933) cannot create a renewal team request: comment entered, Continue clicked, 'An error occurred while trying to submit your request. Please log an IT Ticket.' Verbatim the cluster symptom. Nine reporters across six batches, no JIRA covering it as of 21 Aug. This has been at or near threshold since 19 Aug and should be raised with the TeamHub team on the count alone rather than waiting for one more ticket.",
+        "note": "NOW 10. Owner 8 Sep: the Renewals category is correct and a JIRA ticket already exists for this - the 21 Aug check that found none is superseded (key not supplied). Nine reporters across six batches. The script trips at n > 10.",
     },
     # Sibling of the above but a distinct symptom: the amendment ITSELF errors or
     # freezes, rather than the handoff to the renewals team failing.
@@ -139,8 +139,8 @@ CLUSTERS = {
     # authenticates but does not print is NOT Quick Access - Quick Access covers
     # getting TO the printer. There is still no category for print output, so
     # these carry UNCATEGORISED and cannot be fully tagged.
-    "[UNCATEGORISED] Printer accepts the job but nothing prints": {
-        "cat": "Unclassified",
+    "[XC (Product and Services)] Printer accepts the job but nothing prints": {
+        "cat": "XC (Product and Services)",
         "ids": [],
         "terms": "nothing prints; never prints; sits on a loading screen; shows the job as completed; print jobs send successfully",
         "note": "Three tickets, no category. INC0767028 classifies as Quick Access only because the reporter mentions refreshing WKP from MyRegus Quick Access as a troubleshooting step - the fault is print output. This is the fourth printer ticket overall and the category decision is still open.",

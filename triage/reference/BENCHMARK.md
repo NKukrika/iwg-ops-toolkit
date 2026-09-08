@@ -1610,3 +1610,55 @@ bracket `[Renewals]` is now supported by a ruling rather than provisional.
 INC0771488 becomes Renewals by that rule. It is still **not** in the amend-agreement cluster: its
 body describes TeamHub not loading for multiple users, which is an availability incident that
 happens to carry an amendment title.
+
+## Owner rulings, 8 Sep 2026 — eleven open questions settled
+
+| # | Question | Ruling |
+|---|---|---|
+| 1 | D365-sync cluster: rename or split? | **Goes under Titan** — see below, the naming question is still open |
+| 2 | `[SOA] Balance Mismatch` MST tag | **Leave the name as is**; no MST tag for now |
+| 3 | Renewals cluster at 10 | Category correct, **a JIRA already exists** — the 21 Aug "no JIRA covers this" is superseded |
+| 4 | E-Invoicing category | **No new category — they are `[Invoicing]`** |
+| 6 | Printer category | **`XC (Product and Services)`** |
+| 7 | `[Retainers] Retainer issues` generic name | **Intentional** — all retainer issues share the one name |
+| 8 | `[Network devices]` generic name | **Correct**, and no MST tag for now |
+| 9 | INC0769677 | **Quick Access** — a long-term office booking must be active to use the WiFi code |
+| 10 | INC0769654 | **Invoicing** |
+| 12 | Supplied Impact vs body scope | **A single centre out of a few thousand is genuinely low impact** |
+| 13 | DID volume | Permanent fix **in progress but on hold** |
+| 14 | Non-English tickets | **Rare, and cancelled** — English only is accepted |
+
+### What changed in the pipeline
+
+**E-Invoicing is settled, not interim.** The 28 Aug proposal for a dedicated category is
+withdrawn: the ~20 country clearance failures per week are correctly `[Invoicing]`. The
+`EI-xxxxx` tags mark a workstream, not a missing category.
+
+**Printer faults are `XC (Product and Services)`**, closing a question open since 17 Aug. The
+cluster is renamed from `[UNCATEGORISED] Printer accepts the job but nothing prints` and nine
+printer terms added. No cost to either set.
+
+**Two "problems" I raised were not problems.** The generic master names on `[Retainers] Retainer
+issues` and `[Network devices] Network devices registration/login` are deliberate — retainer
+issues share one name by design. I had read rule 2 as conflicting with the 28 Aug naming ruling;
+the owner's answer is that for master children the shared name is the point.
+
+**The Impact question is closed against me.** I flagged three tickets where the body said "all
+customers at this centre" while Impact was `4 - Low`. A single centre out of a few thousand is
+low impact, so the supplied value was right each time. Note the tension with the older recorded
+rule *"a single centre is impact 2, not 1"* — that rule distinguishes 2 from 1, and does not make
+a single centre high impact.
+
+### Still open
+
+**The D365-sync cluster naming.** "Goes under Titan" answers ownership, and those tickets already
+route to `L2 - Titan` from the sheet, so nothing changed. But the cluster is still called
+*"[SOA] Invoices paid in D365 still showing unpaid in MyRegus"* while holding members that run
+the opposite way, and ~4 tickets remain uncounted for that reason. It sits at 7.
+
+**Quick Access -> P4 contradicts the scorecard.** The owner said *"most of the issues are
+considered P3 ... procedure wasn't followed properly in the past"*, which argues for retiring the
+rule. The scorecard says the opposite: **all 9 Quick Access rows are graded P4**, including
+INC0767930 and INC0768179 which the reviewer corrected **down** from the AI's P2. Retiring the
+rule would break nine graded rows, so it is left in place and the conflict raised rather than
+resolved.
