@@ -121,7 +121,7 @@ CLUSTERS = {
     # freezes, rather than the handoff to the renewals team failing.
     "[Renewals] Error when amending an agreement in TeamHub": {
         "cat": "Renewals",
-        "ids": ["INC0771490"],
+        "ids": [],
         "terms": "error occured when performing amend agreement; error occurred when performing amend agreement; unable to send renewal osa; teamhub freezes; something went wrong, please log an it ticket via teamhub; move agreement; renew recent termination; error occurred while renewing recent termination",
         "note": "NOW 5. INC0769090 (23 Aug) errors on Company > Amend agreement > Select booking(s) > Renew recent termination - the amendment itself failing, NOT the handoff to the renewals team, so it belongs here and not in the 9-count sibling above. Placing it there would have falsely crossed the 10 threshold. CATEGORY IS STILL AN OPEN QUESTION - bracketed [Renewals] provisionally. A resolved ticket worded 'Not able to amend agreement' is tagged XC (Product and Services), while the 14 Aug review put TeamHub amend/renew errors under Renewals. Also spans renewal amendments (INC0768485, INC0768499) and office/country moves (INC0768359, INC0768524) - may want splitting.",
     },
@@ -131,7 +131,7 @@ CLUSTERS = {
     # [SOA] Balance Mismatch competes for these and still has no MST tag.
     "[SOA] Duplicate or invalid posting in MyRegus needs reversing": {
         "cat": "SOA",
-        "ids": [],
+        "ids": ["INC0771866"],
         "terms": "duplicate posting; duplicate payment in myregus; reversing the invalid; invalid refund posting; duplicate refund; zero-out the amount; remove or zero-out; reflecting twice; posted twice",
         "note": "Five across three batches, all finance corrections in MyRegus. Sibling of the D365-sync cluster but the opposite direction - the record arrived twice or wrongly rather than not at all. If you would rather treat these as routine finance requests than defects, they can come off the tally.",
     },
@@ -153,7 +153,7 @@ CLUSTERS = {
         "note": "CONFIRMED IN JIRA: TTN-143719 is Fixed and Ready For Release under R26.08.01, dated 2026-08-13 but NOT YET RELEASED. Both tickets are children of it and the fix is upstream - they should not be worked individually. INC0768932 (19 Aug) is the same defect's second symptom. Expect more until R26.08.01 ships.",
     },
     "[Bookings (Products)] Cannot rollback a booking terminated while provisional": {
-        "cat": "Bookings (Products)", "ids": ["INC0771499"],
+        "cat": "Bookings (Products)", "ids": [],
         "terms": "rollback the termination; cannot rollback; unable to rollback; terminated while provisional; terminated while it was still provisional; greyed out; grayed out; edit/roll back option; rollback the renewal; modify booking and edit booking are grayed out",
         "note": "NOW 5. Both 26 Aug tickets cite the SAME booking reference 172355166 - INC0769483 (MTM renewal, needs the missed invoice raised) and INC0769513 (Office 104, different company name). They may be one occurrence reported twice rather than two, which would make the real count 4. Counted as two and flagged: the cluster is far from the threshold, so nothing turns on it yet, but resolve before it approaches 10.",
     },
@@ -194,6 +194,16 @@ CLUSTER_OF = {t: name for name, c in CLUSTERS.items() for t in c["ids"]}
 # is written from the body rather than drafted mechanically. UNCATEGORISED marks
 # a name that cannot be finalised until the category is decided.
 MANUAL_NAME = {
+    # 9 Sep batch, written from the bodies.
+    "INC0771784": "[Payments - Credit Card] Cannot pay an invoice - the system will not accept a new card",
+    "INC0771787": "[Payments Registration] Error adding a card to the account, with no failed transaction recorded",
+    "INC0771813": "[Payments - Credit Card] Manual invoice payment fails with an AMEX card",
+    "INC0771846": "[SOA] Credit note visible in Dynamics but missing from Titan",
+    "INC0771859": "[Memberships] Coworking membership cannot select the SPACES Hakata Ekimae centre in the portal",
+    "INC0771887": "[Invoicing] Poland credit notes show as succeeded but the documents are blank",
+    "INC0771891": "[Invoicing] India inter-state office booking taxed CGST/SGST instead of IGST",
+    "INC0771902": "[Contract API/Agreements] OSA cannot be generated or sent, and no email is received",
+    "INC0771906": "[Invoicing] Egypt ETA rejects an invoice - item code not in the referenced document (CV302)",
     # 8 Sep batch, written from the bodies.
     "INC0771413": "[Memberships] Two membership clients charged an unjustified amount on 20 August",
     "INC0771400": "[Invoicing] Billing address in the online account does not match Titan",
@@ -579,7 +589,7 @@ det = pd.DataFrame(detail)
 # to 21 Aug). Advance this line when a later run is reviewed -- leaving it behind
 # silently RESETS every cluster count to the older figure, which reads as normal
 # output. The guard below makes that visible instead.
-prev_file = os.environ.get("TRIAGE_TALLY_FROM", "runs/Triage_2026-09-07_v2.xlsx")
+prev_file = os.environ.get("TRIAGE_TALLY_FROM", "runs/Triage_2026-09-08_v4.xlsx")
 if not os.path.exists(prev_file):
     sys.exit(f"""tally source missing: {prev_file}
   The Proposed Masters running count lives only inside that workbook.

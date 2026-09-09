@@ -1662,3 +1662,31 @@ rule. The scorecard says the opposite: **all 9 Quick Access rows are graded P4**
 INC0767930 and INC0768179 which the reviewer corrected **down** from the AI's P2. Retiring the
 rule would break nine graded rows, so it is left in place and the conflict raised rather than
 resolved.
+
+## Run of 9 Sep 2026 — 13 tickets, first run under the 8 Sep rulings
+
+0 unclassified. `[SOA] Duplicate or invalid posting in MyRegus needs reversing` gains INC0771866
+(*"duplicate posting of credit notes in MyRegus causing overpayment"*) and reaches **8**.
+
+The 8 Sep rulings held on live tickets. INC0771887 (Poland credit notes blank though succeeded)
+and INC0771906 (Egypt ETA CV302) classify **Invoicing** without argument, now that e-invoicing is
+settled rather than interim. INC0771891 — an India inter-state booking taxed CGST/SGST instead of
+IGST — also lands on Invoicing, following the INC0769654 ruling that tax and fiscal questions are
+Invoicing rather than a category of their own.
+
+**The payments distinction needed one more wording.** INC0771787, *"error when adding the card to
+account"*, fell through: the table had `add the card` but not `adding the card`. The benchmark
+splits that phrase Payments Registration 4 : Payments - Credit Card 3, which is thin, but the
+8 Sep rule settles it — adding a card is registration. Both sets unchanged at 87.2% and 94.4%.
+
+One weak keyword taken knowingly: `manually pay the invoices` appears once in the benchmark,
+tagged **Payments - Direct Debit**, and was still assigned to Payments - Credit Card because
+INC0771813 fails on an AMEX card. A single benchmark row is not enough to override the
+instrument the ticket actually names.
+
+### The D365-sync family gained another uncounted ticket
+
+INC0771846 — *"credit note visible in Dynamics but missing from Titan"* — is the same family as
+the cluster stuck at 7, and is **again not counted**, because the cluster is still named for one
+direction only. That makes roughly five tickets now sitting outside a cluster they belong to.
+The owner's 8 Sep answer settled ownership (Titan) but not the name.
