@@ -130,16 +130,21 @@ only once they have checked it. The run never posts a comment and never cancels 
 both are ServiceNow actions a person performs, and cancellation is irreversible
 from the requester's side.
 
-**One detector is known-weak.** A company named only in prose — *"the rejected
-invoice of LDS Embera tours"* — carries no account number or label to match, so it
-reads as missing when it is not. Structured identifiers (account and centre
-numbers, booking references, card digits, invoice numbers, emails) are reliable;
-free-text company names are not. Check the ticket before acting on `company` alone.
+**Company and centre are matched by NAME as well as number** (owner, 16 Sep). A
+legal-entity suffix is the reliable marker for a company — `Ltd`, `LLC`, `GmbH`,
+`B.V.`, `S.r.l.`, `Corporation`, `株式会社` — and appears in 21% of tickets; centres
+are matched on a brand (`Regus`, `Spaces`, `HQ`, `Signature`), the word centre
+next to a number, or a named centre such as *"Nof HaGalil Center"*. Adding name
+detection recovered 24 of the 58 tickets previously flagged for a missing company.
 
 **Measured on 238 tickets:** 55% fall under one of the four kinds, and 87% of
-those are missing at least one mandatory detail — 48% of all tickets tagged. Six
-were checked by hand and the centre was genuinely absent in every one, so that is
-the rule biting rather than a detector fault.
+those are missing at least one mandatory detail — 48% of all tickets tagged.
+
+**Centre is the binding constraint** — 90 of the 131 in-scope tickets do not name
+one, against 34 missing a company. Sampled by hand: the remaining company flags
+are bulk e-invoicing tickets that genuinely name no customer, and the centre
+flags carry a company and card but no centre at all. The figure is the rule
+biting, not a detector fault.
 
 ## The short description must EXPLAIN the issue
 

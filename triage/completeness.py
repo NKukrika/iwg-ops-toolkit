@@ -58,6 +58,17 @@ COMPANY = [
     _c(r"\baccount\s+\d{6,}"),
     _c(r"\b\d{6,9}\s*[,:]\s*[A-Z]"),
     _c(r"\bfor\s+(?:the\s+)?(?:client|customer|company)\s+[A-Z]"),
+    # A company NAME, not only a number (owner, 16 Sep). A legal-entity suffix is
+    # the reliable marker: it appears in 21% of tickets and every sampled match
+    # was a real company -- "Lex Artia Professional Corporation", "ATT GmbH",
+    # "Capital Consulting & Engineering, LLC", "AR株式会社".
+    _c(r"\b(?:ltd|limited|llc|inc|corp|corporation|gmbh|plc|pty|kft|oy|pte)\b\.?"),
+    _c(r"\b(?:b\.?v|s\.?r\.?[lo]|s\.?a|s\.?l|d\.?o\.?o|sp\.?\s*z\s*o\.?o)\.?(?:\s|$|,|\))"),
+    _c(r"(?:株式会社|有限会社)"),
+    _c(r"\bco\.\s*,?\s*ltd\b"),
+    # "customer Amber Baele", "client Bao Yang", "Company Name: Solo Brands"
+    _c(r"\b(?:customer|client|company)\s+[A-Z][\w'’\-]+\s+[A-Z][\w'’\-]+"),
+    _c(r"\b(?:customer|company)\s*(?:name)?\s*[:\-]\s*[A-Z]"),
 ]
 
 CENTRE = [
@@ -68,6 +79,14 @@ CENTRE = [
     _c(r"\bcent(?:re|er)\s*#\s*\d+"),
     _c(r"[\w'’\-]+\s+cent(?:re|er)\b"),
     _c(r"\bat\s+the\s+[\w\s\-]{3,30}\s+cent(?:re|er)\b"),
+    # A centre NAME, not only a number (owner, 16 Sep). Centres are named after
+    # the building or location and usually appear with a brand or the word
+    # centre, but also as "Vienna Kohlmarkt", "Allen, Texas", "Nof HaGalil".
+    _c(r"\b(?:regus|spaces|hq|signature|no18)\b"),
+    _c(r"\bcent(?:re|er)\s+(?:no|nr|number)\b"),
+    _c(r"\bcent(?:re|er)s?\b[^.]{0,40}?\b\d{3,5}\b"),
+    _c(r"\b\d{3,5}\b[^.]{0,20}?\bcent(?:re|er)\b"),
+    _c(r"\bfrom\s+the\s+cent(?:re|er)\b"),
 ]
 
 BOOKING_REF = [
