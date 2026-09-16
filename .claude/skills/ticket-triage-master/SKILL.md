@@ -106,6 +106,41 @@ That marks a workstream, not a missing category — they are Invoicing.
 **Non-English tickets are cancelled.** Only English is accepted, so a body in another language
 needs no special handling; classify from whatever English the title carries and flag it.
 
+## Mandatory details, and cancelling without them
+
+Owner rule, 16 Sep 2026. What a ticket must carry depends on the kind of issue:
+
+| Kind | Must include |
+|---|---|
+| **Bookings** | Company, Centre, Booking reference |
+| **Payments** | Company, Centre, card first 6 + last 4 — and an invoice number **if the ticket is about paying an invoice** |
+| **Invoices** | Company, Centre, Invoice number |
+| **Internal / Staff** | Email of the affected user |
+
+A ticket missing any of these gets a comment saying exactly what is absent, and
+is then **cancelled**. Categories outside these four kinds carry no mandatory
+requirement and are never proposed for cancellation.
+
+`completeness.py` performs the check and drafts the comment; the run writes them
+to the **`Cancel - missing detail`** sheet with the ticket, its kind, what is
+missing and the comment text ready to post.
+
+**The run never cancels anything.** Posting the comment and cancelling are
+ServiceNow actions a person performs — cancelling is irreversible from the
+requester's side, so it is a review queue, not an action.
+
+**One detector is known-weak.** A company named only in prose — *"the rejected
+invoice of LDS Embera tours"* — carries no account number or label to match, so
+it reads as missing when it is not. Structured identifiers (account and centre
+numbers, booking references, card digits, invoice numbers, emails) are reliable;
+free-text company names are not. Check the ticket before cancelling on `company`
+alone.
+
+**Measured on 238 tickets:** 63% fall under one of the four kinds, and 88% of
+those are missing at least one mandatory detail. That is the rule biting, not a
+detector fault — six sampled tickets were checked by hand and the centre was
+genuinely absent in every one.
+
 ## The short description must EXPLAIN the issue
 
 One line saying what went wrong — not the opening words of the ticket. `propose_master_name()`

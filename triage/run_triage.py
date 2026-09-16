@@ -700,6 +700,43 @@ rev = pd.DataFrame([{"TicketID": t, "Issue": k, "Detail": d}
                     for t, k, d in list(review) + REVIEW_EXTRA],
                    columns=["TicketID", "Issue", "Detail"])
 
+
+# --- mandatory details (owner rule, 16 Sep 2026). Requirements depend on the
+# kind of issue: bookings need company/centre/booking ref, payments need
+# company/centre/card 6+4 and an invoice number when the ticket is about paying
+# an invoice, invoices need company/centre/invoice number, and internal or staff
+# tickets need the affected user's email. A ticket missing any of these gets a
+# comment saying what is absent and is then cancelled.
+#
+# REVIEW QUEUE, NOT AN ACTION. The sheet drafts the comment and names the gap;
+# a person posts it and cancels in ServiceNow. Cancelling is irreversible from
+# the requester's side, and one detector is known-weak: a company named only in
+# prose ("the rejected invoice of LDS Embera tours") has no account number or
+# label to match, so it reads as missing when it is not. Confirm before acting.
+import completeness as _cmp
+
+_srcmap = {str(r["Number"]).strip(): r for _, r in src.iterrows()}
+_incomplete = []
+for _, _fr in fin.iterrows():
+    _sr = _srcmap.get(str(_fr["TicketID"]).strip())
+    if _sr is None:
+        continue
+    _sd, _de = _sr["Short description"], _sr.get("Description")
+    _miss = _cmp.check(_sd, _de, _fr["Category"])
+    if not _miss:
+        continue
+    _incomplete.append({
+        "TicketID": _fr["TicketID"],
+        "Short Description": _fr["Short Description"],
+        "Category": _fr["Category"],
+        "Ticket kind": _cmp.kind(_sd, _de, _fr["Category"]),
+        "Missing": ", ".join(_miss),
+        "Comment to post": _cmp.comment_for(_miss),
+    })
+inc = pd.DataFrame(_incomplete, columns=[
+    "TicketID", "Short Description", "Category", "Ticket kind", "Missing",
+    "Comment to post"])
+
 with pd.ExcelWriter(OUT, engine="openpyxl") as xl:
     fin.to_excel(xl, sheet_name="Finished Triage", index=False)
     det.to_excel(xl, sheet_name="Triage Detail (full)", index=False)
@@ -715,6 +752,7 @@ with pd.ExcelWriter(OUT, engine="openpyxl") as xl:
         columns=["TicketID", "On export", "Rule suggests", "Kept", "Category"])
      ).to_excel(xl, sheet_name="Group Mismatches", index=False)
     tagsheet.to_excel(xl, sheet_name="Tags", index=False)
+    inc.to_excel(xl, sheet_name="Cancel - missing detail", index=False)
 
 from openpyxl import load_workbook
 from openpyxl.styles import Font, PatternFill, Alignment
@@ -753,4 +791,6 @@ print("\n--- category ---")
 print(csum.to_string(index=False))
 print("\n--- tally ---")
 print(prev[[namecol, "Total seen", "Threshold (10)"]].to_string(index=False))
+print(f"  missing mandatory detail: {len(inc)} of {len(fin)} "
+      f"-- see the Cancel - missing detail sheet")
 print(f"\nmismatches: {len(mism)}   review rows: {len(rev)}   master corrections: {len(corr)}")
