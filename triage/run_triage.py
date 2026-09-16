@@ -17,6 +17,7 @@ import sys, os, re, glob, datetime
 sys.path.insert(0, "reference")
 import pandas as pd
 import classify as C
+import completeness as _cmp
 
 SRC = sys.argv[1] if len(sys.argv) > 1 else None
 if not SRC:
@@ -553,6 +554,17 @@ for _, s in src.iterrows():
         review.append((tid, "No category",
                        "Unclassified - cannot be fully tagged until a category is decided."))
 
+    # Owner rule, 16 Sep: a ticket missing its mandatory details is TAGGED
+    # MissingInformation, not cancelled. The owner reviews the tagged set first;
+    # cancellation follows only once they have checked it.
+    _need = _cmp.check(sd, desc, cat)
+    if _need:
+        tags.append("MissingInformation")
+        review.append((tid, "Missing mandatory information",
+                       "Missing " + ", ".join(_need) +
+                       ". Tagged MissingInformation for review - do not cancel "
+                       "until the owner has checked it."))
+
     rows.append({
         "TicketID": tid, "Short Description": new_sd, "Master Ticket": master or "",
         "Assigned Group (should be)": g["group"], "Tags": ", ".join(tags),
@@ -713,8 +725,6 @@ rev = pd.DataFrame([{"TicketID": t, "Issue": k, "Detail": d}
 # the requester's side, and one detector is known-weak: a company named only in
 # prose ("the rejected invoice of LDS Embera tours") has no account number or
 # label to match, so it reads as missing when it is not. Confirm before acting.
-import completeness as _cmp
-
 _srcmap = {str(r["Number"]).strip(): r for _, r in src.iterrows()}
 _incomplete = []
 for _, _fr in fin.iterrows():
@@ -731,7 +741,7 @@ for _, _fr in fin.iterrows():
         "Category": _fr["Category"],
         "Ticket kind": _cmp.kind(_sd, _de, _fr["Category"]),
         "Missing": ", ".join(_miss),
-        "Comment to post": _cmp.comment_for(_miss),
+        "Comment to post when cancelling": _cmp.comment_for(_miss),
     })
 inc = pd.DataFrame(_incomplete, columns=[
     "TicketID", "Short Description", "Category", "Ticket kind", "Missing",
@@ -752,7 +762,7 @@ with pd.ExcelWriter(OUT, engine="openpyxl") as xl:
         columns=["TicketID", "On export", "Rule suggests", "Kept", "Category"])
      ).to_excel(xl, sheet_name="Group Mismatches", index=False)
     tagsheet.to_excel(xl, sheet_name="Tags", index=False)
-    inc.to_excel(xl, sheet_name="Cancel - missing detail", index=False)
+    inc.to_excel(xl, sheet_name="Missing Information", index=False)
 
 from openpyxl import load_workbook
 from openpyxl.styles import Font, PatternFill, Alignment
@@ -792,5 +802,5 @@ print(csum.to_string(index=False))
 print("\n--- tally ---")
 print(prev[[namecol, "Total seen", "Threshold (10)"]].to_string(index=False))
 print(f"  missing mandatory detail: {len(inc)} of {len(fin)} "
-      f"-- see the Cancel - missing detail sheet")
+      f"tagged MissingInformation -- see the Missing Information sheet")
 print(f"\nmismatches: {len(mism)}   review rows: {len(rev)}   master corrections: {len(corr)}")

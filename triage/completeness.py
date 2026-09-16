@@ -8,12 +8,13 @@ Owner rule, 16 Sep 2026. Requirements depend on the kind of issue:
     Invoices         Company, Centre, Invoice number
     Internal/Staff   Email of the affected user
 
-A ticket missing any of these gets a comment saying what is absent, and is then
-cancelled. This module reports the gap and drafts the comment; **it never
-cancels anything** -- that is a ServiceNow action the desk performs.
+A ticket missing any of these is TAGGED `MissingInformation`. It is NOT
+cancelled: the owner reviews the tagged set first, and cancellation follows only
+once they have checked it. This module reports the gap and drafts the comment to
+post when that decision is made; it never cancels or posts anything itself.
 
-Categories outside those four kinds carry no mandatory-detail requirement, so
-they are never proposed for cancellation here.
+Categories outside those four kinds carry no mandatory-detail requirement and
+are never flagged. SOA was dropped from the invoice kind on 16 Sep.
 
     from completeness import check, comment_for
     miss = check(short_desc, description, category)
@@ -31,7 +32,9 @@ def _c(p):
 BOOKING_CATS = ("Bookings (Products)", "Bookings (Products) - Short Stay")
 PAYMENT_CATS = ("Payments Registration", "Payments - Credit Card",
                 "Payments - Direct Debit")
-INVOICE_CATS = ("Invoicing", "SOA")
+# SOA dropped by owner ruling 16 Sep -- statement/balance reconciliation does
+# not always cite an invoice, so it carries no mandatory-detail requirement.
+INVOICE_CATS = ("Invoicing",)
 # Staff-facing work. "Internal/Staff" is about who is affected rather than the
 # category, so the category list is the reliable part and INTERNAL_SIGNAL widens
 # it to tickets raised by a centre team about their own access.
@@ -155,7 +158,7 @@ def check(short_desc, description, category=None):
 
 
 def comment_for(missing):
-    """The comment to post before cancelling."""
+    """The comment to post if and when the ticket is cancelled."""
     if not missing:
         return ""
     items = "\n".join("  - %s" % LABEL.get(m, m) for m in missing)
