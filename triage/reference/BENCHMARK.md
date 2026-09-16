@@ -1690,3 +1690,26 @@ INC0771846 — *"credit note visible in Dynamics but missing from Titan"* — is
 the cluster stuck at 7, and is **again not counted**, because the cluster is still named for one
 direction only. That makes roughly five tickets now sitting outside a cluster they belong to.
 The owner's 8 Sep answer settled ownership (Titan) but not the name.
+
+## Rescued from the archived repo, 16 Sep 2026 — the `Solution Email` category
+
+`CoWork---Triage` was archived on 24 Aug, and a commit landed in it afterwards
+(`ea19105`) that never reached the toolkit. GitHub refuses the push —
+*"This repository was archived so it is read-only"*, 403 — so that work was
+stranded rather than merely behind.
+
+Comparing the two repos file by file found one thing the toolkit did not have:
+the **`Solution Email`** category, precedence 10, CONFIRMED, *"Solution email,
+including missing or incorrect content"*. Carried across. Everything else in the
+archived repo is strictly older — `run_triage.py` is 564 lines there against 806
+here, and the category keyword text 11,048 characters against 15,443.
+
+`solution email` appears on **one** benchmark ticket, untagged, so the benchmark
+cannot judge it; category is unchanged at 87.2%. **The scorecard check could not
+run** — `AI_vs_Human_Triage_Scorecard_TEMPLATE_4.xlsx` is no longer on the
+Desktop and only TEMPLATE_2 survives, in Downloads. This change is therefore
+verified on the benchmark only.
+
+**The scorecards live outside the repo and keep moving.** They belong in
+`reference/truth/` beside `training 2.xlsx`, which is gitignored and stable.
+Until they do, the scorecard half of the verification rule cannot be relied on.
